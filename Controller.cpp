@@ -11,6 +11,7 @@
 #include <iostream>
 #include <map>
 #include <limits>
+#include <memory>
 
 using namespace std;
 
@@ -31,7 +32,7 @@ Controller::~Controller()
 // create View object, run the program by accepting user commands, then destroy View object
 void Controller::run()
 {
-    View *view = new View;
+    shared_ptr<View> view(make_shared<View>()); // make map view here
     g_Model_ptr->attach(view);
     while (true)
     {
@@ -44,12 +45,12 @@ void Controller::run()
             if (command_func_map.find(command) != command_func_map.end())
             {
                 // if so, run function and return if it returns true
-                if ((this->*command_func_map[command])(view)) return;
+                if ((this->*command_func_map[command])()) return;
             }
             else
             {
                 // if not, find the ship with this name
-                Ship *ship;
+                weak_ptr<Ship> ship;
                 try { ship = g_Model_ptr->get_ship_ptr(command); }
                 catch (Error& e) { throw Error(UNRECOGNIZED_ERROR_MSG); }
                 // if there is no ship with that name, an unrecognized command error will be thrown
@@ -102,13 +103,13 @@ double Controller::read_speed()
     if (speed < 0) throw Error("Negative speed entered!");
     return speed;
 }
-Ship* Controller::read_ship()
+weak_ptr<Ship> Controller::read_ship()
 {
     string name;
     cin >> name;
     return g_Model_ptr->get_ship_ptr(name);
 }
-Island* Controller::read_island()
+weak_ptr<Island> Controller::read_island()
 {
     string name;
     cin >> name;
@@ -116,7 +117,7 @@ Island* Controller::read_island()
 }
 
 // command functions
-bool Controller::quit(View *view)
+bool Controller::quit()
 {
     g_Model_ptr->detach(view);
     delete view;
@@ -125,22 +126,22 @@ bool Controller::quit(View *view)
 }
 
 // view functions
-bool Controller::view_default(View *view)
+bool Controller::view_default()
 {
     view->set_defaults();
     return false;
 }
-bool Controller::view_size(View *view)
+bool Controller::view_size()
 {
     view->set_size(read_int());
     return false;
 }
-bool Controller::view_zoom(View *view)
+bool Controller::view_zoom()
 {
     view->set_scale(read_double());
     return false;
 }
-bool Controller::view_pan(View *view)
+bool Controller::view_pan()
 {
     double point_x, point_y;
     point_x = read_double();
@@ -148,24 +149,24 @@ bool Controller::view_pan(View *view)
     view->set_origin(Point(point_x, point_y));
     return false;
 }
-bool Controller::view_show(View *view)
+bool Controller::view_show()
 {
     view->draw();
     return false;
 }
 
 // model functions
-bool Controller::model_status(View *view)
+bool Controller::model_status()
 {
     g_Model_ptr->describe();
     return false;
 }
-bool Controller::model_go(View *view)
+bool Controller::model_go()
 {
     g_Model_ptr->update();
     return false;
 }
-bool Controller::model_create(View *view)
+bool Controller::model_create()
 {
     string new_name;
     cin >> new_name;
@@ -181,49 +182,49 @@ bool Controller::model_create(View *view)
 }
 
 // ship functions
-void Controller::ship_course(Ship *ship)
+void Controller::ship_course(weak_ptr<Ship> ship)
 {
     double course = read_double();
     if (course < 0 || course >= MAX_COURSE_DEGREES) throw Error("Invalid heading entered!");
     ship->set_course_and_speed(course, read_speed());
 }
-void Controller::ship_position(Ship *ship)
+void Controller::ship_position(weak_ptr<Ship> ship)
 {
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
     ship->set_destination_position_and_speed(Point(point_x, point_y), read_speed());
 }
-void Controller::ship_destination(Ship *ship)
+void Controller::ship_destination(weak_ptr<Ship> ship)
 {
     Island *destination = read_island();
     ship->set_destination_position_and_speed(destination->get_location(), read_speed());
 }
-void Controller::ship_load_at(Ship *ship)
+void Controller::ship_load_at(weak_ptr<Ship> ship)
 {
     ship->set_load_destination(read_island());
 }
-void Controller::ship_unload_at(Ship *ship)
+void Controller::ship_unload_at(weak_ptr<Ship> ship)
 {
     ship->set_unload_destination(read_island());
 }
-void Controller::ship_dock_at(Ship *ship)
+void Controller::ship_dock_at(weak_ptr<Ship> ship)
 {
     ship->dock(read_island());
 }
-void Controller::ship_attack(Ship *ship)
+void Controller::ship_attack(weak_ptr<Ship> ship)
 {
     ship->attack(read_ship());
 }
-void Controller::ship_refuel(Ship *ship)
+void Controller::ship_refuel(weak_ptr<Ship> ship)
 {
     ship->refuel();
 }
-void Controller::ship_stop(Ship *ship)
+void Controller::ship_stop(weak_ptr<Ship> ship)
 {
     ship->stop();
 }
-void Controller::ship_stop_attack(Ship *ship)
+void Controller::ship_stop_attack(weak_ptr<Ship> ship)
 {
     ship->stop_attack();
 }

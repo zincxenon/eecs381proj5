@@ -5,6 +5,7 @@
 #include "Geometry.h"
 #include "Navigation.h"
 #include <string>
+#include <memory>
 
 /* Warship class
 A Warship is a ship with firepower and range member variables, and some services for
@@ -27,7 +28,7 @@ public:
 	// will	throw Error("Cannot attack!") if not Afloat
 	// will throw Error("Warship may not attack itself!")
     // if supplied target is the same as this Warship
-	void attack(Ship* target_ptr_) override;
+	void attack(shared_ptr<Ship> target_ptr_) override;
 
 	// will throw Error("Was not attacking!") if not Attacking
 	void stop_attack() override;
@@ -68,7 +69,7 @@ private:
 
 	State_warship warship_state;
 
-	Ship *target;
+	std::weak_ptr<Ship> target;
 };
 
 #endif

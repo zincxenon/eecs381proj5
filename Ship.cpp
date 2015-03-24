@@ -38,7 +38,7 @@ Ship::~Ship()
 
 // Return true if the ship is Stopped and the distance to the supplied island
 // is less than or equal to 0.1 nm
-bool Ship::can_dock(Island *island_ptr) const
+bool Ship::can_dock(shared_ptr<Island> island_ptr) const
 {
 	assert(island_ptr);
 	return ship_state == State_ship::STOPPED && cartesian_distance(get_location(), island_ptr->get_location()) <= SHIP_DOCK_DISTANCE;
@@ -51,7 +51,7 @@ void Ship::update()
 	if (is_afloat() && resistance < 0)
 	{
 		ship_state = State_ship::SINKING;
-		docked_at = nullptr;
+		docked_at.reset();
 		track.set_speed(0);
 		cout << get_name() << " sinking" << endl;
 		return;
@@ -150,7 +150,7 @@ void Ship::set_destination_position_and_speed(Point destination_position, double
 	track.set_course(compass.direction);
 	track.set_speed(speed);
 	ship_state = State_ship::MOVING_TO_POSITION;
-	docked_at = nullptr;
+	docked_at.reset();
 	cout << get_name() << " will sail on ";
 	print_course_and_speed();
 	cout << " to " << destination << endl;
@@ -165,7 +165,7 @@ void Ship::set_course_and_speed(double course, double speed)
 	track.set_course(course);
 	track.set_speed(speed);
 	ship_state = State_ship::MOVING_ON_COURSE;
-	docked_at = nullptr;
+	docked_at.reset();
 	cout << get_name() << " will sail on ";
 	print_course_and_speed();
 	cout << endl;
@@ -181,13 +181,13 @@ void Ship::stop()
 	}
 	track.set_speed(0);
 	ship_state = State_ship::STOPPED;
-	docked_at = nullptr;
+	docked_at.reset();
 	cout << get_name() << " stopping at " << get_location() << endl;
 }
 
 // dock at an Island - set our position = Island's position, go into Docked state
 // may throw Error("Can't dock!");
-void Ship::dock(Island *island_ptr)
+void Ship::dock(shared_ptr<Island> island_ptr)
 {
 	assert(island_ptr);
 	if (!can_dock(island_ptr))
@@ -222,19 +222,19 @@ void Ship::refuel()
 /*** Fat interface command functions ***/
 // These functions throw an Error exception for this class
 // will always throw Error("Cannot load at a destination!");
-void Ship::set_load_destination(Island *)
+void Ship::set_load_destination(shared_ptr<Island>)
 {
 	throw Error("Cannot load at a destination!");
 }
 
 // will always throw Error("Cannot unload at a destination!");
-void Ship::set_unload_destination(Island *)
+void Ship::set_unload_destination(shared_ptr<Island>)
 {
 	throw Error("Cannot unload at a destination!");
 }
 
 // will always throw Error("Cannot attack!");
-void Ship::attack(Ship *in_target_ptr)
+void Ship::attack(shared_ptr<Ship> in_target_ptr)
 {
 	throw Error(CANNOT_ATTACK_MSG);
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <memory>
 #include "Utility.h"
 
 class Sim_object;
@@ -54,7 +55,7 @@ public:
         return islands.find(name.substr(0, SHORTEN_NAME_LENGTH)) != islands.end();
     }
 	// will throw Error("Island not found!") if no island of that name
-	Island* get_island_ptr(const std::string& name) const;
+	std::weak_ptr<Island> get_island_ptr(const std::string& name) const;
 
 	// is there such an ship?
 	bool is_ship_present(const std::string& name) const
@@ -62,9 +63,9 @@ public:
         return ships.find(name.substr(0, SHORTEN_NAME_LENGTH)) != ships.end();
     }
 	// add a new ship to the list, and update the view
-	void add_ship(Ship*);
+	void add_ship(std::shared_ptr<Ship>);
 	// will throw Error("Ship not found!") if no ship of that name
-	Ship* get_ship_ptr(const std::string& name) const;
+	std::weak_ptr<Ship> get_ship_ptr(const std::string& name) const;
 	
 	// tell all objects to describe themselves
 	void describe() const;
@@ -74,10 +75,10 @@ public:
 	/* View services */
 	// Attaching a View adds it to the container and causes it to be updated
     // with all current objects' locations (or other state information).
-	void attach(View*);
+	void attach(std::shared_ptr<View>);
 	// Detach the View by discarding the supplied pointer from the container of Views
     // - no updates sent to it thereafter.
-	void detach(View*);
+	void detach(std::shared_ptr<View>);
 	
     // notify the views about an object's location
 	void notify_location(const std::string& name, Point location);
@@ -91,11 +92,11 @@ public:
 private:
 	int time;		// the simulated time
 
-    std::map<std::string, Island*> islands;
-	std::map<std::string, Ship*> ships;
-	std::map<std::string, Sim_object*> objects;
+    std::map<std::string, std::shared_ptr<Island>> islands;
+	std::map<std::string, std::shared_ptr<Ship>> ships;
+	std::map<std::string, std::shared_ptr<Sim_object>> objects;
 
-    std::vector<View*> views;
+    std::vector<std::shared_ptr<View>> views;
 };
 
 #endif

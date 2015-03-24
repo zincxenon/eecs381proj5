@@ -12,6 +12,6 @@ with new, so some other component is responsible for deleting it.
 */
 
 // may throw Error("Trying to create ship of unknown type!")
-Ship * create_ship(const std::string& name, const std::string& type, Point initial_position);
+std::shared_ptr<Ship> create_ship(const std::string& name, const std::string& type, Point initial_position);
 
 #endif

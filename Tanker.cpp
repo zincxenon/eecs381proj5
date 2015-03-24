@@ -22,8 +22,7 @@ const double TANKER_CARGO_CAPACITY = 1000;
 // initialize, the output constructor message
 Tanker::Tanker(const std::string &name_, Point position_) :
         Ship(name_, position_, TANKER_INIT_FUEL, TANKER_MAX_SPEED, TANKER_FUEL_CONSUMPTION, TANKER_INIT_RESISTANCE),
-        load_dest(nullptr), unload_dest(nullptr), cargo(TANKER_INIT_CARGO), cargo_capacity(TANKER_CARGO_CAPACITY),
-        tanker_state(State_tanker::NO_CARGO_DEST)
+        cargo(TANKER_INIT_CARGO), cargo_capacity(TANKER_CARGO_CAPACITY), tanker_state(State_tanker::NO_CARGO_DEST)
 {
     cout << "Tanker " << get_name() << " constructed" << endl;
 }
@@ -52,24 +51,24 @@ void Tanker::set_course_and_speed(double course, double speed)
 // if both cargo destination are already set, throw Error("Tanker has cargo destinations!").
 // if they are the same, leave at the set values, and throw Error("Load and unload cargo destinations are the same!")
 // if both destinations are now set, start the cargo cycle
-void Tanker::set_load_destination(Island *dest)
+void Tanker::set_load_destination(shared_ptr<Island> dest)
 {
     assert(dest);
     if (tanker_state != State_tanker::NO_CARGO_DEST) throw Error(TANKER_HAS_DEST_MSG);
     if (unload_dest == dest) throw Error(CARGO_DEST_SAME_MSG);
     load_dest = dest;
     cout << get_name() << " will load at " << dest->get_name() << endl;
-    if (unload_dest != nullptr) start_cycle();
+    if (unload_dest) start_cycle();
 }
 
-void Tanker::set_unload_destination(Island *dest)
+void Tanker::set_unload_destination(shared_ptr<Island> dest)
 {
     assert(dest);
     if (tanker_state != State_tanker::NO_CARGO_DEST) throw Error(TANKER_HAS_DEST_MSG);
     if (load_dest == dest) throw Error(CARGO_DEST_SAME_MSG);
     unload_dest = dest;
     cout << get_name() << " will unload at " << dest->get_name() << endl;
-    if (load_dest != nullptr) start_cycle();
+    if (load_dest) start_cycle();
 }
 
 // when told to stop, clear the cargo destinations and stop
@@ -94,12 +93,12 @@ void Tanker::update()
             return;
         case State_tanker::MOVING_TO_LOAD:
             if (is_moving()) return;
-            dock(load_dest);
+            dock(load_dest.lock());
             tanker_state = State_tanker::LOADING;
             return;
         case State_tanker::MOVING_TO_UNLOAD:
             if (is_moving()) return;
-            dock(unload_dest);
+            dock(unload_dest.lock());
             tanker_state = State_tanker::UNLOADING;
             return;
         case State_tanker::LOADING:
@@ -172,13 +171,13 @@ void Tanker::start_cycle()
     {
         if (cargo == 0 && can_dock(load_dest))
         {
-            dock(load_dest);
+            dock(load_dest.lock());
             tanker_state = State_tanker::LOADING;
             return;
         }
         if (cargo > 0 && can_dock(unload_dest))
         {
-            dock(unload_dest);
+            dock(unload_dest.lock());
             tanker_state = State_tanker::UNLOADING;
             return;
         }
@@ -200,7 +199,8 @@ void Tanker::start_cycle()
 // Ends the tanker's cargo cycle
 void Tanker::end_cycle()
 {
-    load_dest = unload_dest = nullptr;
+    load_dest.reset();
+    unload_dest.reset();
     tanker_state = State_tanker::NO_CARGO_DEST;
     cout << get_name() << " now has no cargo destinations" << endl;
 }

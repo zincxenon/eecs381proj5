@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Geometry.h"
 #include <string>
+#include <memory>
 
 class Island;
 
@@ -70,7 +71,7 @@ public:
 
     // Return true if the ship is Stopped and the distance to the supplied island
     // is less than or equal to 0.1 nm
-    bool can_dock(Island *island_ptr) const;
+    bool can_dock(shared_ptr<Island> island_ptr) const;
 
     /*** Interface to derived classes ***/
     // Update the state of the Ship
@@ -107,13 +108,13 @@ public:
     /*** Fat interface command functions ***/
     // These functions throw an Error exception for this class
     // will always throw Error("Cannot load at a destination!");
-    virtual void set_load_destination(Island *);
+    virtual void set_load_destination(shared_ptr<Island>);
 
     // will always throw Error("Cannot unload at a destination!");
-    virtual void set_unload_destination(Island *);
+    virtual void set_unload_destination(shared_ptr<Island>);
 
     // will always throw Error("Cannot attack!");
-    virtual void attack(Ship *in_target_ptr);
+    virtual void attack(shared_ptr<Ship> in_target_ptr);
 
     // will always throw Error("Cannot attack!");
     virtual void stop_attack();
@@ -137,9 +138,9 @@ protected:
     }
 
     // return pointer to the Island currently docked at, or nullptr if not docked
-    Island *get_docked_Island() const
+    std::shared_ptr<Island> get_docked_Island() const
     {
-        return docked_at;
+        return docked_at.lock();
     }
 
 private:
@@ -153,7 +154,7 @@ private:
     int resistance;                  // Resistance of ship
 
     State_ship ship_state;                   // Current state of the ship
-    Island *docked_at;                     // If docked, the island the ship is docked at
+    std::weak_ptr<Island> docked_at;                     // If docked, the island the ship is docked at
 
     // Updates position, fuel, and movement_state, assuming 1 time unit (1 hr)
     void calculate_movement();

@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <memory>
 #include "Ship.h"
 #include "Island.h"
 #include "View.h"

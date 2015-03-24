@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 class Model;
 class View;
@@ -28,38 +29,38 @@ private:
 	int read_int();
 	double read_double();
 	double read_speed();
-	Ship* read_ship();
-	Island* read_island();
+	std::weak_ptr<Ship> read_ship();
+	std::weak_ptr<Island> read_island();
 
 	// command functions
-	typedef bool (Controller::*command_func)(View *);
+	typedef bool (Controller::*command_func)();
 	// these functions return true if execution is to be ended, false otherwise
-	bool quit(View *view);
+	bool quit();
 
 	// view functions
-	bool view_default(View *view);
-	bool view_size(View *view);
-	bool view_zoom(View *view);
-	bool view_pan(View *view);
-	bool view_show(View *view);
+	bool view_default();
+	bool view_size();
+	bool view_zoom();
+	bool view_pan();
+	bool view_show();
 
 	// model functions
-	bool model_status(View *view);
-	bool model_go(View *view);
-	bool model_create(View *view);
+	bool model_status();
+	bool model_go();
+	bool model_create();
 
 	// ship functions
-	typedef void (Controller::*ship_func)(Ship *);
-	void ship_course(Ship *ship);
-	void ship_position(Ship *ship);
-	void ship_destination(Ship *ship);
-	void ship_load_at(Ship *ship);
-	void ship_unload_at(Ship *ship);
-	void ship_dock_at(Ship *ship);
-	void ship_attack(Ship *ship);
-	void ship_refuel(Ship *ship);
-	void ship_stop(Ship *ship);
-	void ship_stop_attack(Ship *ship);
+	typedef void (Controller::*ship_func)(std::weak_ptr<Ship>);
+	void ship_course(std::weak_ptr<Ship> ship);
+	void ship_position(std::weak_ptr<Ship> ship);
+	void ship_destination(std::weak_ptr<Ship> ship);
+	void ship_load_at(std::weak_ptr<Ship> ship);
+	void ship_unload_at(std::weak_ptr<Ship> ship);
+	void ship_dock_at(std::weak_ptr<Ship> ship);
+	void ship_attack(std::weak_ptr<Ship> ship);
+	void ship_refuel(std::weak_ptr<Ship> ship);
+	void ship_stop(std::weak_ptr<Ship> ship);
+	void ship_stop_attack(std::weak_ptr<Ship> ship);
 
 	std::map<std::string, command_func> command_func_map {
 			{"quit", &Controller::quit},

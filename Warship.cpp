@@ -43,7 +43,7 @@ void Warship::update()
 // will	throw Error("Cannot attack!") if not Afloat
 // will throw Error("Warship may not attack itself!")
 // if supplied target is the same as this Warship
-void Warship::attack(Ship* target_ptr_)
+void Warship::attack(shared_ptr<Ship> target_ptr_)
 {
     if (!is_afloat()) throw Error("Cannot attack!");
     if (target_ptr_ == this) throw Error("Warship may not attack itself!");
@@ -58,7 +58,7 @@ void Warship::stop_attack()
 {
     if (warship_state != State_warship::ATTACKING) throw Error("Was not attacking!");
     warship_state = State_warship::NOT_ATTACKING;
-    target = nullptr;
+    target.reset();
     cout << get_name() << " stopping attack" << endl;
 }
 
