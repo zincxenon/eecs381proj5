@@ -16,7 +16,7 @@ const int SHIP_DOCK_DISTANCE = .1;
 
 Ship::Ship(const string &name_, Point position_, double fuel_capacity_,
         double maximum_speed_, double fuel_consumption_, int resistance_) :
-        Sim_object(name_), Track_base(position_, Course_speed(0, 0)), fuel(fuel_capacity_),
+        Sim_object(name_), track(position_, Course_speed(0, 0)), fuel(fuel_capacity_),
 		fuel_consumption(fuel_consumption_), fuel_capacity(fuel_capacity_), max_speed(maximum_speed_),
 		resistance(resistance_), ship_state(State_ship::STOPPED), docked_at(nullptr)
 {
@@ -52,7 +52,7 @@ void Ship::update()
 	{
 		ship_state = State_ship::SINKING;
 		docked_at = nullptr;
-		set_speed(0);
+		track.set_speed(0);
 		cout << get_name() << " sinking" << endl;
 		return;
 	}
@@ -147,8 +147,8 @@ void Ship::set_destination_position_and_speed(Point destination_position, double
 	check_movement_and_speed(speed);
 	destination = destination_position;
 	Compass_vector compass(get_location(), destination);
-	set_course(compass.direction);
-	set_speed(speed);
+	track.set_course(compass.direction);
+	track.set_speed(speed);
 	ship_state = State_ship::MOVING_TO_POSITION;
 	docked_at = nullptr;
 	cout << get_name() << " will sail on ";
@@ -162,8 +162,8 @@ void Ship::set_destination_position_and_speed(Point destination_position, double
 void Ship::set_course_and_speed(double course, double speed)
 {
 	check_movement_and_speed(speed);
-	set_course(course);
-	set_speed(speed);
+	track.set_course(course);
+	track.set_speed(speed);
 	ship_state = State_ship::MOVING_ON_COURSE;
 	docked_at = nullptr;
 	cout << get_name() << " will sail on ";
@@ -179,7 +179,7 @@ void Ship::stop()
 	{
 		throw Error("Ship cannot move!");
 	}
-	set_speed(0);
+	track.set_speed(0);
 	ship_state = State_ship::STOPPED;
 	docked_at = nullptr;
 	cout << get_name() << " stopping at " << get_location() << endl;
@@ -194,7 +194,7 @@ void Ship::dock(Island *island_ptr)
 	{
 		throw Error("Can't dock!");
 	}
-	Track_base::set_position(island_ptr->get_location());
+	track.set_position(island_ptr->get_location());
 	docked_at = island_ptr;
 	ship_state = State_ship::DOCKED;
 	g_Model_ptr->notify_location(get_name(), get_location());
@@ -298,11 +298,11 @@ void Ship::calculate_movement()
 	if(ship_state == State_ship::MOVING_TO_POSITION && destination_distance <= distance_possible)
 	{
 		// yes, make our new position the destination
-		set_position(destination);
+		track.set_position(destination);
 		// we travel the destination distance, using that much fuel
 		double fuel_required = destination_distance * fuel_consumption;
 		fuel -= fuel_required;
-		set_speed(0.);
+		track.set_speed(0.);
 		ship_state = State_ship::STOPPED;
 	}
 	else
@@ -314,7 +314,7 @@ void Ship::calculate_movement()
 		if(full_fuel_required >= fuel)
 		{
 			fuel = 0.0;
-            set_speed(0.);
+            track.set_speed(0.);
 			ship_state = State_ship::DEAD_IN_THE_WATER;
 		}
 		else

@@ -27,7 +27,7 @@ functions are implemented in this class to throw an Error exception.
 
 enum class State_ship {DOCKED, STOPPED, MOVING_TO_POSITION, MOVING_ON_COURSE, DEAD_IN_THE_WATER, SINKING, SUNK, ON_THE_BOTTOM};
 
-class Ship : public Sim_object, public Track_base {
+class Ship : public Sim_object {
 public:
     // output destructor message
     virtual ~Ship();
@@ -35,7 +35,7 @@ public:
     /*** Readers ***/
     // return the current position
     Point get_location() const override {
-        return Track_base::get_position();
+        return track.get_position();
     }
 
     // Return true if ship can move (it is not dead in the water or in the process or sinking);
@@ -147,6 +147,7 @@ private:
     double fuel_consumption;            // tons/nm required
     double fuel_capacity;               // Maximum fuel capacity
     Point destination;                    // Current destination if any
+    Track_base track;                   // Track_base of this ship
 
     double max_speed;                   // Maximum speed
     int resistance;                  // Resistance of ship
