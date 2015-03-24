@@ -16,14 +16,8 @@ enum class State_warship {NOT_ATTACKING, ATTACKING};
 
 class Warship : public Ship {
 public:
-	// initialize, then output constructor message
-	Warship(const std::string& name_, Point position_, double fuel_capacity_, 
-		double maximum_speed_, double fuel_consumption_, int resistance_,
-		int firepower_, double maximum_range_);
-
-	// a pure virtual function to mark this as an abstract class, 
-	// but defined anyway to output destructor message
-	virtual ~Warship() = 0;
+	// output destructor message
+	virtual ~Warship();
 	
 	// perform warship-specific behavior
 	void update() override;
@@ -41,7 +35,10 @@ public:
 	void describe() const override;
 
 protected:
-	// future projects may need additional protected members
+	// initialize, then output constructor message
+	Warship(const std::string& name_, Point position_, double fuel_capacity_,
+			double maximum_speed_, double fuel_consumption_, int resistance_,
+			int firepower_, double maximum_range_);
 
 	// return true if this Warship is in the attacking state
 	bool is_attacking() const

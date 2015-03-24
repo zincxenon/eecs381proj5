@@ -29,13 +29,8 @@ enum class State_ship {DOCKED, STOPPED, MOVING_TO_POSITION, MOVING_ON_COURSE, DE
 
 class Ship : public Sim_object, public Track_base {
 public:
-    // initialize, then output constructor message
-    Ship(const std::string &name_, Point position_, double fuel_capacity_,
-            double maximum_speed_, double fuel_consumption_, int resistance_);
-
-    // made pure virtual to mark this class as abstract, but defined anyway
-    // to output destructor message
-    virtual ~Ship() = 0;
+    // output destructor message
+    virtual ~Ship();
 
     /*** Readers ***/
     // return the current position
@@ -132,7 +127,9 @@ public:
     Ship& operator=(const Ship&) = delete;
 
 protected:
-    // future projects may need additional protected members
+    // initialize, then output constructor message
+    Ship(const std::string &name_, Point position_, double fuel_capacity_,
+            double maximum_speed_, double fuel_consumption_, int resistance_);
 
     double get_maximum_speed() const
     {
