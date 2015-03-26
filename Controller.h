@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <vector>
 
 class Model;
 class View;
@@ -25,6 +26,8 @@ public:
 	void run();
 
 private:
+	std::vector<View> views;
+
 	// helper functions
 	int read_int();
 	double read_double();

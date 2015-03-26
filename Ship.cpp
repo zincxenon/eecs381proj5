@@ -60,7 +60,7 @@ void Ship::update()
 	{
 		case State_ship::SINKING:
 			ship_state = State_ship::SUNK;
-			g_Model_ptr->notify_gone(get_name());
+			Model::get_Instance()->notify_gone(get_name());
 			cout << get_name() << " sunk" << endl;
 			break;
 		case State_ship::SUNK:
@@ -71,7 +71,7 @@ void Ship::update()
 		case State_ship::MOVING_ON_COURSE:
 		case State_ship::MOVING_TO_POSITION:
 			calculate_movement();
-			g_Model_ptr->notify_location(get_name(), get_location());
+			Model::get_Instance()->notify_location(get_name(), get_location());
 			cout << get_name() << " now at " << get_location() << endl;
 			break;
 		case State_ship::STOPPED:
@@ -135,7 +135,7 @@ void Ship::describe() const
 
 void Ship::broadcast_current_state()
 {
-	g_Model_ptr->notify_location(get_name(), get_location());
+	Model::get_Instance()->notify_location(get_name(), get_location());
 }
 
 /*** Command functions ***/
@@ -197,7 +197,7 @@ void Ship::dock(shared_ptr<Island> island_ptr)
 	track.set_position(island_ptr->get_location());
 	docked_at = island_ptr;
 	ship_state = State_ship::DOCKED;
-	g_Model_ptr->notify_location(get_name(), get_location());
+	Model::get_Instance()->notify_location(get_name(), get_location());
 	cout << get_name() << " docked at " << island_ptr->get_name() << endl;
 }
 

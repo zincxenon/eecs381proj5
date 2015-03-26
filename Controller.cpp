@@ -7,13 +7,16 @@
 #include "Geometry.h"
 #include "Ship_factory.h"
 #include "Utility.h"
+#include <cassert>
 #include <string>
 #include <iostream>
+#include <functional>
 #include <map>
 #include <limits>
 #include <memory>
 
 using namespace std;
+using namespace placeholders;
 
 const char* const UNRECOGNIZED_ERROR_MSG = "Unrecognized command!";
 const int MAX_COURSE_DEGREES = 360;
@@ -33,12 +36,12 @@ Controller::~Controller()
 void Controller::run()
 {
     shared_ptr<View> view(make_shared<View>()); // make map view here
-    g_Model_ptr->attach(view);
+    Model::get_Instance()->attach(view);
     while (true)
     {
         try
         {
-            cout << "\nTime " << g_Model_ptr->get_time() << ": Enter command: ";
+            cout << "\nTime " << Model::get_Instance()->get_time() << ": Enter command: ";
             string command;
             cin >> command;
             // first, check the command func map if this a command word
@@ -51,7 +54,7 @@ void Controller::run()
             {
                 // if not, find the ship with this name
                 shared_ptr<Ship> ship;
-                try { ship = g_Model_ptr->get_ship_ptr(command); }
+                try { ship = Model::get_Instance()->get_ship_ptr(command); }
                 catch (Error& e) { throw Error(UNRECOGNIZED_ERROR_MSG); }
                 // if there is no ship with that name, an unrecognized command error will be thrown
                 // read in the ship command
@@ -107,20 +110,19 @@ shared_ptr<Ship> Controller::read_ship()
 {
     string name;
     cin >> name;
-    return g_Model_ptr->get_ship_ptr(name);
+    return Model::get_Instance()->get_ship_ptr(name);
 }
 shared_ptr<Island> Controller::read_island()
 {
     string name;
     cin >> name;
-    return g_Model_ptr->get_island_ptr(name);
+    return Model::get_Instance()->get_island_ptr(name);
 }
 
 // command functions
 bool Controller::quit()
 {
-    g_Model_ptr->detach(view);
-    delete view;
+    for_each(views.begin(), views.end(), bind(Model::detach, Model::get_Instance(), _1));
     cout << "Done" << endl;
     return true;
 }
@@ -158,12 +160,12 @@ bool Controller::view_show()
 // model functions
 bool Controller::model_status()
 {
-    g_Model_ptr->describe();
+    Model::get_Instance()->describe();
     return false;
 }
 bool Controller::model_go()
 {
-    g_Model_ptr->update();
+    Model::get_Instance()->update();
     return false;
 }
 bool Controller::model_create()
@@ -171,25 +173,27 @@ bool Controller::model_create()
     string new_name;
     cin >> new_name;
     if (new_name.size() < SHORTEN_NAME_LENGTH) throw Error("Name is too short!");
-    if (g_Model_ptr->is_name_in_use(new_name)) throw Error("Name is already in use!");
+    if (Model::get_Instance()->is_name_in_use(new_name)) throw Error("Name is already in use!");
     string new_type;
     cin >> new_type;
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
-    g_Model_ptr->add_ship(create_ship(new_name, new_type, Point(point_x, point_y)));
+    Model::get_Instance()->add_ship(create_ship(new_name, new_type, Point(point_x, point_y)));
     return false;
 }
 
 // ship functions
 void Controller::ship_course(shared_ptr<Ship> ship)
 {
+    assert(ship);
     double course = read_double();
     if (course < 0 || course >= MAX_COURSE_DEGREES) throw Error("Invalid heading entered!");
     ship->set_course_and_speed(course, read_speed());
 }
 void Controller::ship_position(shared_ptr<Ship> ship)
 {
+    assert(ship);
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
@@ -197,34 +201,42 @@ void Controller::ship_position(shared_ptr<Ship> ship)
 }
 void Controller::ship_destination(shared_ptr<Ship> ship)
 {
+    assert(ship);
     Island *destination = read_island();
     ship->set_destination_position_and_speed(destination->get_location(), read_speed());
 }
 void Controller::ship_load_at(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->set_load_destination(read_island());
 }
 void Controller::ship_unload_at(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->set_unload_destination(read_island());
 }
 void Controller::ship_dock_at(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->dock(read_island());
 }
 void Controller::ship_attack(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->attack(read_ship());
 }
 void Controller::ship_refuel(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->refuel();
 }
 void Controller::ship_stop(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->stop();
 }
 void Controller::ship_stop_attack(shared_ptr<Ship> ship)
 {
+    assert(ship);
     ship->stop_attack();
 }

@@ -27,17 +27,17 @@ when asked to do so by an object, tells all the Views whenever anything changes 
 Model also provides facilities for looking up objects given their name.
 */
 
-// Declare the global model pointer
-class Model;
-extern Model* g_Model_ptr;
-
 class Model {
 public:
-	// create the initial objects, output constructor message
-	Model();
-	
-	// destroy all objects, output destructor message
-	~Model();
+	typedef std::shared_ptr<Island> Island_ptr;
+	typedef std::shared_ptr<Ship> Ship_ptr;
+	typedef std::shared_ptr<Sim_object> Sim_object_ptr;
+
+	typedef std::map<std::string, Island_ptr> Island_map;
+	typedef std::map<std::string, Ship_ptr> Ship_map;
+	typedef std::map<std::string, Sim_object_ptr> Sim_object_map;
+
+	static Model* get_Instance();
 
 	// return the current time
 	int get_time() {return time;}
@@ -55,7 +55,12 @@ public:
         return islands.find(name.substr(0, SHORTEN_NAME_LENGTH)) != islands.end();
     }
 	// will throw Error("Island not found!") if no island of that name
-	std::weak_ptr<Island> get_island_ptr(const std::string& name) const;
+	Island_ptr get_island_ptr(const std::string& name) const;
+	// returns a vector of ptrs to every island
+	Island_map get_islands() const
+	{
+		return islands;
+	};
 
 	// is there such an ship?
 	bool is_ship_present(const std::string& name) const
@@ -63,9 +68,9 @@ public:
         return ships.find(name.substr(0, SHORTEN_NAME_LENGTH)) != ships.end();
     }
 	// add a new ship to the list, and update the view
-	void add_ship(std::shared_ptr<Ship>);
+	void add_ship(Ship_ptr);
 	// will throw Error("Ship not found!") if no ship of that name
-	std::weak_ptr<Ship> get_ship_ptr(const std::string& name) const;
+	Ship_ptr get_ship_ptr(const std::string& name) const;
 	
 	// tell all objects to describe themselves
 	void describe() const;
@@ -90,11 +95,18 @@ public:
 	Model& operator=(const Model&) = delete;
 
 private:
+	// create the initial objects, output constructor message
+	Model();
+	static Model* model;
+
+	// destroy all objects, output destructor message
+	~Model();
+
 	int time;		// the simulated time
 
-    std::map<std::string, std::shared_ptr<Island>> islands;
-	std::map<std::string, std::shared_ptr<Ship>> ships;
-	std::map<std::string, std::shared_ptr<Sim_object>> objects;
+    Island_map islands;
+	Ship_map ships;
+	Sim_object_map objects;
 
     std::vector<std::shared_ptr<View>> views;
 };

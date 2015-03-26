@@ -4,6 +4,7 @@
 #include "Ship.h"
 #include "Geometry.h"
 #include <string>
+#include <memory>
 
 /*
 A Tanker is a ship with a large cargo capacity for fuel.

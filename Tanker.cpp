@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include <string>
 #include <iostream>
+#include <memory>
 #include <cassert>
 
 using namespace std;
