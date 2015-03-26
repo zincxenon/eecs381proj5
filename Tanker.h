@@ -50,8 +50,8 @@ public:
 	void describe() const override;
 
 private:
-	std::weak_ptr<Island> load_dest;			// Loading destination
-	std::weak_ptr<Island> unload_dest;		// Unloading destination
+	std::shared_ptr<Island> load_dest;			// Loading destination
+	std::shared_ptr<Island> unload_dest;		// Unloading destination
 
 	double cargo;				// Cargo currently being carried
 	double cargo_capacity;		// Maximum cargo that can be held

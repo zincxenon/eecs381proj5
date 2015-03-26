@@ -99,7 +99,7 @@ public:
 
     // dock at an Island - set our position = Island's position, go into Docked state
     // may throw Error("Can't dock!");
-    virtual void dock(Island *island_ptr);
+    virtual void dock(std::shared_ptr<Island> island_ptr);
 
     // Refuel - must already be docked at an island; fill takes as much as possible
     // may throw Error("Must be docked!");
@@ -108,20 +108,20 @@ public:
     /*** Fat interface command functions ***/
     // These functions throw an Error exception for this class
     // will always throw Error("Cannot load at a destination!");
-    virtual void set_load_destination(shared_ptr<Island>);
+    virtual void set_load_destination(std::shared_ptr<Island>);
 
     // will always throw Error("Cannot unload at a destination!");
-    virtual void set_unload_destination(shared_ptr<Island>);
+    virtual void set_unload_destination(std::shared_ptr<Island>);
 
     // will always throw Error("Cannot attack!");
-    virtual void attack(shared_ptr<Ship> in_target_ptr);
+    virtual void attack(std::shared_ptr<Ship> in_target_ptr);
 
     // will always throw Error("Cannot attack!");
     virtual void stop_attack();
 
     // interactions with other objects
     // receive a hit from an attacker
-    virtual void receive_hit(int hit_force, Ship *attacker_ptr);
+    virtual void receive_hit(int hit_force, std::shared_ptr<Ship> attacker_ptr);
 
     // disallow copy/move, construction or assignment
     Ship(const Ship&) = delete;
@@ -154,7 +154,7 @@ private:
     int resistance;                  // Resistance of ship
 
     State_ship ship_state;                   // Current state of the ship
-    std::weak_ptr<Island> docked_at;                     // If docked, the island the ship is docked at
+    std::shared_ptr<Island> docked_at;                     // If docked, the island the ship is docked at
 
     // Updates position, fuel, and movement_state, assuming 1 time unit (1 hr)
     void calculate_movement();

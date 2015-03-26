@@ -23,9 +23,9 @@ Model* g_Model_ptr;
 // create the initial objects, output constructor message
 Model::Model() : time(0)
 {
-    Island *exxon = new Island("Exxon", Point(10, 10), 1000, 200);
-    Island *shell = new Island("Shell", Point(0, 30), 1000, 200);
-    Island *bermuda = new Island("Bermuda", Point(20, 20));
+    shared_ptr<Island> exxon = new Island("Exxon", Point(10, 10), 1000, 200);
+    shared_ptr<Island> shell = new Island("Shell", Point(0, 30), 1000, 200);
+    shared_ptr<Island> bermuda = new Island("Bermuda", Point(20, 20));
 
     string short_exxon = exxon->get_name().substr(0, SHORTEN_NAME_LENGTH);
     islands[short_exxon] = exxon;
@@ -47,23 +47,23 @@ Model::Model() : time(0)
 // destroy all objects, output destructor message
 Model::~Model()
 {
-    for_each(objects.begin(), objects.end(), [](pair<string, Sim_object*> pair){delete pair.second;});
+    for_each(objects.begin(), objects.end(), [](pair<string, shared_ptr<Sim_object>> pair){delete pair.second;});
     cout << "Model destructed" << endl;
 }
 
 // will throw Error("Island not found!") if no island of that name
-Island* Model::get_island_ptr(const std::string& name) const
+shared_ptr<Island> Model::get_island_ptr(const std::string& name) const
 {
     string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
     auto island_it = islands.find(shortened_name);
     if (island_it == islands.end()) throw Error(ISLAND_NOT_FOUND_MSG);
-    Island *island = (*island_it).second;
+    shared_ptr<Island> island = (*island_it).second;
     if (island->get_name() != name) throw Error(ISLAND_NOT_FOUND_MSG);
     return island;
 }
 
 // add a new ship to the list, and update the view
-void Model::add_ship(Ship* ship)
+void Model::add_ship(shared_ptr<Ship> ship)
 {
     string shortened_name = ship->get_name().substr(0, SHORTEN_NAME_LENGTH);
     ships[shortened_name] = ship;
@@ -71,7 +71,7 @@ void Model::add_ship(Ship* ship)
     notify_location(ship->get_name(), ship->get_location());
 }
 // will throw Error("Ship not found!") if no ship of that name
-Ship* Model::get_ship_ptr(const std::string& name) const
+shared_ptr<Ship> Model::get_ship_ptr(const std::string& name) const
 {
     string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
     auto ship_it = ships.find(shortened_name);
@@ -84,14 +84,14 @@ Ship* Model::get_ship_ptr(const std::string& name) const
 // tell all objects to describe themselves
 void Model::describe() const
 {
-    for_each(objects.begin(), objects.end(), [](pair<string, Sim_object*> pair){pair.second->describe();});
+    for_each(objects.begin(), objects.end(), [](pair<string, shared_ptr<Sim_object>> pair){pair.second->describe();});
 }
 // increment the time, and tell all objects to update themselves
 void Model::update()
 {
     ++time;
-    for_each(objects.begin(), objects.end(), [](pair<string, Sim_object*> pair){pair.second->update();});
-    vector<Ship*> dead_ships;
+    for_each(objects.begin(), objects.end(), [](pair<string, shared_ptr<Sim_object>> pair){pair.second->update();});
+    vector<shared_ptr<Ship>> dead_ships;
     for (auto&& ship_pair : ships)
     {
         if (ship_pair.second->is_on_the_bottom())
@@ -103,21 +103,20 @@ void Model::update()
     {
         objects.erase(dead_ship->get_name().substr(0, SHORTEN_NAME_LENGTH));
         ships.erase(dead_ship->get_name().substr(0, SHORTEN_NAME_LENGTH));
-        delete dead_ship;
     }
 }
 
 /* View services */
 // Attaching a View adds it to the container and causes it to be updated
 // with all current objects' locations (or other state information).
-void Model::attach(View* view)
+void Model::attach(shared_ptr<View> view)
 {
     views.push_back(view);
-    for_each(objects.begin(), objects.end(), [view](pair<string, Sim_object*> pair){view->update_location(pair.second->get_name(), pair.second->get_location());});
+    for_each(objects.begin(), objects.end(), [view](pair<string, shared_ptr<Sim_object>> pair){view->update_location(pair.second->get_name(), pair.second->get_location());});
 }
 // Detach the View by discarding the supplied pointer from the container of Views
 // - no updates sent to it thereafter.
-void Model::detach(View* view)
+void Model::detach(shared_ptr<View> view)
 {
     views.erase(find(views.begin(), views.end(), view));
 }

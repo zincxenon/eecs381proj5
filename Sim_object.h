@@ -10,7 +10,6 @@ struct Point;
 
 class Sim_object {
 public:
-	Sim_object(const std::string& name_);
 
     virtual ~Sim_object();
 	
@@ -24,6 +23,9 @@ public:
 	virtual Point get_location() const = 0;
 	virtual void describe() const = 0;
 	virtual void update() = 0;
+
+protected:
+	Sim_object(const std::string& name_);
 	
 private:
 	std::string name;

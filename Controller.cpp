@@ -50,7 +50,7 @@ void Controller::run()
             else
             {
                 // if not, find the ship with this name
-                weak_ptr<Ship> ship;
+                shared_ptr<Ship> ship;
                 try { ship = g_Model_ptr->get_ship_ptr(command); }
                 catch (Error& e) { throw Error(UNRECOGNIZED_ERROR_MSG); }
                 // if there is no ship with that name, an unrecognized command error will be thrown
@@ -103,13 +103,13 @@ double Controller::read_speed()
     if (speed < 0) throw Error("Negative speed entered!");
     return speed;
 }
-weak_ptr<Ship> Controller::read_ship()
+shared_ptr<Ship> Controller::read_ship()
 {
     string name;
     cin >> name;
     return g_Model_ptr->get_ship_ptr(name);
 }
-weak_ptr<Island> Controller::read_island()
+shared_ptr<Island> Controller::read_island()
 {
     string name;
     cin >> name;
@@ -182,49 +182,49 @@ bool Controller::model_create()
 }
 
 // ship functions
-void Controller::ship_course(weak_ptr<Ship> ship)
+void Controller::ship_course(shared_ptr<Ship> ship)
 {
     double course = read_double();
     if (course < 0 || course >= MAX_COURSE_DEGREES) throw Error("Invalid heading entered!");
     ship->set_course_and_speed(course, read_speed());
 }
-void Controller::ship_position(weak_ptr<Ship> ship)
+void Controller::ship_position(shared_ptr<Ship> ship)
 {
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
     ship->set_destination_position_and_speed(Point(point_x, point_y), read_speed());
 }
-void Controller::ship_destination(weak_ptr<Ship> ship)
+void Controller::ship_destination(shared_ptr<Ship> ship)
 {
     Island *destination = read_island();
     ship->set_destination_position_and_speed(destination->get_location(), read_speed());
 }
-void Controller::ship_load_at(weak_ptr<Ship> ship)
+void Controller::ship_load_at(shared_ptr<Ship> ship)
 {
     ship->set_load_destination(read_island());
 }
-void Controller::ship_unload_at(weak_ptr<Ship> ship)
+void Controller::ship_unload_at(shared_ptr<Ship> ship)
 {
     ship->set_unload_destination(read_island());
 }
-void Controller::ship_dock_at(weak_ptr<Ship> ship)
+void Controller::ship_dock_at(shared_ptr<Ship> ship)
 {
     ship->dock(read_island());
 }
-void Controller::ship_attack(weak_ptr<Ship> ship)
+void Controller::ship_attack(shared_ptr<Ship> ship)
 {
     ship->attack(read_ship());
 }
-void Controller::ship_refuel(weak_ptr<Ship> ship)
+void Controller::ship_refuel(shared_ptr<Ship> ship)
 {
     ship->refuel();
 }
-void Controller::ship_stop(weak_ptr<Ship> ship)
+void Controller::ship_stop(shared_ptr<Ship> ship)
 {
     ship->stop();
 }
-void Controller::ship_stop_attack(weak_ptr<Ship> ship)
+void Controller::ship_stop_attack(shared_ptr<Ship> ship)
 {
     ship->stop_attack();
 }

@@ -58,9 +58,9 @@ protected:
 	}
 
 	// get the target
-	Ship* get_target() const
+	std::shared_ptr<Ship> get_target() const
 	{
-		return target;
+		return target.lock();
 	}
 
 private:

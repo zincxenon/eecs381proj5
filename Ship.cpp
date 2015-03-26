@@ -18,7 +18,7 @@ Ship::Ship(const string &name_, Point position_, double fuel_capacity_,
         double maximum_speed_, double fuel_consumption_, int resistance_) :
         Sim_object(name_), track(position_, Course_speed(0, 0)), fuel(fuel_capacity_),
 		fuel_consumption(fuel_consumption_), fuel_capacity(fuel_capacity_), max_speed(maximum_speed_),
-		resistance(resistance_), ship_state(State_ship::STOPPED), docked_at(nullptr)
+		resistance(resistance_), ship_state(State_ship::STOPPED), docked_at()
 {
     cout << "Ship " << get_name() << " constructed" << endl;
 }
@@ -247,7 +247,7 @@ void Ship::stop_attack()
 
 // interactions with other objects
 // receive a hit from an attacker
-void Ship::receive_hit(int hit_force, Ship *attacker_ptr)
+void Ship::receive_hit(int hit_force, shared_ptr<Ship> attacker_ptr)
 {
 	resistance -= hit_force;
 	cout << get_name() << " hit with " << hit_force << ", resistance now " << resistance << endl;

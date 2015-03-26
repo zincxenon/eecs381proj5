@@ -22,7 +22,8 @@ const double TANKER_CARGO_CAPACITY = 1000;
 // initialize, the output constructor message
 Tanker::Tanker(const std::string &name_, Point position_) :
         Ship(name_, position_, TANKER_INIT_FUEL, TANKER_MAX_SPEED, TANKER_FUEL_CONSUMPTION, TANKER_INIT_RESISTANCE),
-        cargo(TANKER_INIT_CARGO), cargo_capacity(TANKER_CARGO_CAPACITY), tanker_state(State_tanker::NO_CARGO_DEST)
+        load_dest(), unload_dest(), cargo(TANKER_INIT_CARGO), cargo_capacity(TANKER_CARGO_CAPACITY),
+        tanker_state(State_tanker::NO_CARGO_DEST)
 {
     cout << "Tanker " << get_name() << " constructed" << endl;
 }

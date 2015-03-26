@@ -29,8 +29,8 @@ private:
 	int read_int();
 	double read_double();
 	double read_speed();
-	std::weak_ptr<Ship> read_ship();
-	std::weak_ptr<Island> read_island();
+	std::shared_ptr<Ship> read_ship();
+	std::shared_ptr<Island> read_island();
 
 	// command functions
 	typedef bool (Controller::*command_func)();
@@ -50,17 +50,17 @@ private:
 	bool model_create();
 
 	// ship functions
-	typedef void (Controller::*ship_func)(std::weak_ptr<Ship>);
-	void ship_course(std::weak_ptr<Ship> ship);
-	void ship_position(std::weak_ptr<Ship> ship);
-	void ship_destination(std::weak_ptr<Ship> ship);
-	void ship_load_at(std::weak_ptr<Ship> ship);
-	void ship_unload_at(std::weak_ptr<Ship> ship);
-	void ship_dock_at(std::weak_ptr<Ship> ship);
-	void ship_attack(std::weak_ptr<Ship> ship);
-	void ship_refuel(std::weak_ptr<Ship> ship);
-	void ship_stop(std::weak_ptr<Ship> ship);
-	void ship_stop_attack(std::weak_ptr<Ship> ship);
+	typedef void (Controller::*ship_func)(std::shared_ptr<Ship>);
+	void ship_course(std::shared_ptr<Ship> ship);
+	void ship_position(std::shared_ptr<Ship> ship);
+	void ship_destination(std::shared_ptr<Ship> ship);
+	void ship_load_at(std::shared_ptr<Ship> ship);
+	void ship_unload_at(std::shared_ptr<Ship> ship);
+	void ship_dock_at(std::shared_ptr<Ship> ship);
+	void ship_attack(std::shared_ptr<Ship> ship);
+	void ship_refuel(std::shared_ptr<Ship> ship);
+	void ship_stop(std::shared_ptr<Ship> ship);
+	void ship_stop_attack(std::shared_ptr<Ship> ship);
 
 	std::map<std::string, command_func> command_func_map {
 			{"quit", &Controller::quit},

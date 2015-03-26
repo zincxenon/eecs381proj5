@@ -11,7 +11,7 @@ Warship::Warship(const string& name_, Point position_, double fuel_capacity_,
         double maximum_speed_, double fuel_consumption_, int resistance_,
         int firepower_, double maximum_range_) :
         Ship(name_, position_, fuel_capacity_, maximum_speed_, fuel_consumption_, resistance_),
-        firepower(firepower_), max_range(maximum_range_), warship_state(State_warship::NOT_ATTACKING), target(nullptr)
+        firepower(firepower_), max_range(maximum_range_), warship_state(State_warship::NOT_ATTACKING), target()
 {
     cout << "Warship " << get_name() << " constructed" << endl;
 }
