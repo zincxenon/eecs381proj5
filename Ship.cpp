@@ -278,7 +278,7 @@ void Ship::calculate_movement()
 	// get the distance to destination
 	double destination_distance = cartesian_distance(get_location(), destination);
 	// get full step distance we can move on this time step
-	double full_distance = get_speed() * time;
+	double full_distance = track.get_speed() * time;
 	// get fuel required for full step distance
 	double full_fuel_required = full_distance * fuel_consumption;	// tons = nm * tons/nm
 	// how far and how long can we sail in this time period based on the fuel state?
@@ -340,5 +340,5 @@ void Ship::check_movement_and_speed(double speed)
 // Prints the course and speed
 void Ship::print_course_and_speed() const
 {
-	cout << "course " << get_course() << " deg, speed " << get_speed() << " nm/hr";
+	cout << "course " << track.get_course() << " deg, speed " << track.get_speed() << " nm/hr";
 }

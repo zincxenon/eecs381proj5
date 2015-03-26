@@ -55,8 +55,9 @@ Model::~Model()
 Island* Model::get_island_ptr(const std::string& name) const
 {
     string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
-    if (!is_island_present(shortened_name)) throw Error(ISLAND_NOT_FOUND_MSG);
-    Island *island = (*islands.find(shortened_name)).second;
+    auto island_it = islands.find(shortened_name);
+    if (island_it == islands.end()) throw Error(ISLAND_NOT_FOUND_MSG);
+    Island *island = (*island_it).second;
     if (island->get_name() != name) throw Error(ISLAND_NOT_FOUND_MSG);
     return island;
 }
@@ -73,8 +74,9 @@ void Model::add_ship(Ship* ship)
 Ship* Model::get_ship_ptr(const std::string& name) const
 {
     string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
-    if (!is_ship_present(shortened_name)) throw Error(SHIP_NOT_FOUND_MSG);
-    Ship *ship = (*ships.find(shortened_name)).second;
+    auto ship_it = ships.find(shortened_name);
+    if (ship_it == ships.end()) throw Error(SHIP_NOT_FOUND_MSG);
+    Ship *ship = (*ship_it).second;
     if (ship->get_name() != name) throw Error(SHIP_NOT_FOUND_MSG);
     return ship;
 }
