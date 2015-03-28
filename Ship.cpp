@@ -237,7 +237,7 @@ void Ship::receive_hit(int hit_force, shared_ptr<Ship> attacker_ptr)
 		track.set_speed(0);
 		Model *model = Model::get_Instance();
 		model->notify_gone(get_name());
-		model->remove_ship(shared_from_this());
+		model->remove_ship(dynamic_pointer_cast<Ship, Sim_object>(shared_from_this()));
 		cout << get_name() << " sunk" << endl;
 	}
 }
@@ -298,7 +298,7 @@ void Ship::calculate_movement()
 	{
 		// go as far as we can, stay in the same movement state
 		// simply move for the amount of time possible
-		update_position(time_possible);
+		track.update_position(time_possible);
 		// have we used up our fuel?
 		if(full_fuel_required >= fuel)
 		{

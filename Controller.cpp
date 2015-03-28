@@ -2,11 +2,13 @@
 
 #include "Model.h"
 #include "View.h"
+#include "View_map.h"
 #include "Ship.h"
 #include "Island.h"
 #include "Geometry.h"
 #include "Ship_factory.h"
 #include "Utility.h"
+#include <algorithm>
 #include <cassert>
 #include <string>
 #include <iostream>
@@ -35,7 +37,7 @@ Controller::~Controller()
 // create View object, run the program by accepting user commands, then destroy View object
 void Controller::run()
 {
-    shared_ptr<View> view(make_shared<View>()); // make map view here
+    shared_ptr<View> view(make_shared<View_map>()); // make map view here
     Model::get_Instance()->attach(view);
     while (true)
     {
@@ -122,7 +124,8 @@ shared_ptr<Island> Controller::read_island()
 // command functions
 bool Controller::quit()
 {
-    for_each(views.begin(), views.end(), bind(Model::detach, Model::get_Instance(), _1));
+    Model *model = Model::get_Instance();
+    for_each(views.begin(), views.end(), [model](shared_ptr<View> view){model->detach(view);});
     cout << "Done" << endl;
     return true;
 }
@@ -130,17 +133,19 @@ bool Controller::quit()
 // view functions
 bool Controller::view_default()
 {
-    view->set_defaults();
+    for_each(views.begin(), views.end(), mem_fn(&View::set_defaults));
     return false;
 }
 bool Controller::view_size()
 {
-    view->set_size(read_int());
+    int new_size = read_int();
+    for_each(views.begin(), views.end(), bind(&View::set_size, _1, new_size));
     return false;
 }
 bool Controller::view_zoom()
 {
-    view->set_scale(read_double());
+    double new_scale = read_double();
+    for_each(views.begin(), views.end(), bind(&View::set_scale, _1, new_scale));
     return false;
 }
 bool Controller::view_pan()
@@ -148,12 +153,13 @@ bool Controller::view_pan()
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
-    view->set_origin(Point(point_x, point_y));
+    Point new_point(point_x, point_y);
+    for_each(views.begin(), views.end(), bind(&View::set_origin, _1, new_point));
     return false;
 }
 bool Controller::view_show()
 {
-    view->draw();
+    for_each(views.begin(), views.end(), mem_fn(&View::draw));
     return false;
 }
 
@@ -202,7 +208,7 @@ void Controller::ship_position(shared_ptr<Ship> ship)
 void Controller::ship_destination(shared_ptr<Ship> ship)
 {
     assert(ship);
-    Island *destination = read_island();
+    shared_ptr<Island> destination = read_island();
     ship->set_destination_position_and_speed(destination->get_location(), read_speed());
 }
 void Controller::ship_load_at(shared_ptr<Ship> ship)

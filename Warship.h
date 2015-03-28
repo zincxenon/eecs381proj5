@@ -28,7 +28,7 @@ public:
 	// will	throw Error("Cannot attack!") if not Afloat
 	// will throw Error("Warship may not attack itself!")
     // if supplied target is the same as this Warship
-	void attack(shared_ptr<Ship> target_ptr_) override;
+	void attack(std::shared_ptr<Ship> target_ptr_) override;
 
 	// will throw Error("Was not attacking!") if not Attacking
 	void stop_attack() override;
@@ -53,8 +53,8 @@ protected:
 	// is the current target in range?
 	bool target_in_range() const
 	{
-		if (target == nullptr) return false;
-		return cartesian_distance(get_location(), target->get_location()) < max_range;
+		if (target.expired()) return false;
+		return cartesian_distance(get_location(), target.lock()->get_location()) < max_range;
 	}
 
 	// get the target
@@ -64,7 +64,7 @@ protected:
 	}
 
 private:
-	double firepower;
+	int firepower;
 	double max_range;
 
 	State_warship warship_state;

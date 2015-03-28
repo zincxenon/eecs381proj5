@@ -26,7 +26,7 @@ public:
 	void run();
 
 private:
-	std::vector<View> views;
+	std::vector<std::shared_ptr<View>> views;
 
 	// helper functions
 	int read_int();

@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <cassert>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void Warship::update()
 {
     Ship::update();
     if (warship_state == State_warship::NOT_ATTACKING) return;
-    if (!is_afloat() || !target || !target->is_afloat())
+    if (!is_afloat() || target.expired() || !target.lock()->is_afloat())
     {
         stop_attack();
     }
@@ -48,10 +49,11 @@ void Warship::attack(shared_ptr<Ship> target_ptr_)
 {
     if (!is_afloat()) throw Error("Cannot attack!");
     if (target_ptr_ == shared_from_this()) throw Error("Warship may not attack itself!");
-    if (target_ptr_ == target) throw Error("Already attacking this target!");
+    shared_ptr<Ship> current_target = target.lock();
+    if (target_ptr_ == current_target) throw Error("Already attacking this target!");
     target = target_ptr_;
     warship_state = State_warship::ATTACKING;
-    cout << get_name() << " will attack " << target->get_name() << endl;
+    cout << get_name() << " will attack " << target_ptr_->get_name() << endl;
 }
 
 // will throw Error("Was not attacking!") if not Attacking
@@ -69,7 +71,7 @@ void Warship::describe() const
     if (warship_state == State_warship::ATTACKING)
     {
         string target_output = "absent ship";
-        if (target) target_output = target->get_name();
+        if (!target.expired()) target_output = target.lock()->get_name();
         cout << "Attacking " << target_output << endl;
     }
 }
@@ -78,5 +80,6 @@ void Warship::describe() const
 void Warship::fire_at_target()
 {
     cout << get_name() << " fires" << endl;
-    target->receive_hit(firepower, shared_from_this());
+    assert(!target.expired());
+    target.lock()->receive_hit(firepower, dynamic_pointer_cast<Ship, Sim_object>(shared_from_this()));
 }

@@ -4,6 +4,7 @@
 #include "Geometry.h"
 #include <string>
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ const double CRUISER_INIT_FUEL = 1000;
 const double CRUISER_MAX_SPEED = 20;
 const double CRUISER_FUEL_CONSUMPTION = 10;
 const double CRUISER_INIT_RESISTANCE = 6;
-const double CRUISER_FIREPOWER = 3;
+const int CRUISER_FIREPOWER = 3;
 const double CRUISER_MAX_RANGE = 15;
 
 // initialize, then output constructor message
@@ -49,7 +50,7 @@ void Cruiser::describe() const
     Warship::describe();
 }
 
-void Cruiser::receive_hit(int hit_force, Ship *attacker_ptr)
+void Cruiser::receive_hit(int hit_force, shared_ptr<Ship> attacker_ptr)
 {
     Ship::receive_hit(hit_force, attacker_ptr);
     if (is_afloat() && !is_attacking()) attack(attacker_ptr);

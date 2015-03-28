@@ -5,6 +5,7 @@
 #include "Ship.h"
 #include "Geometry.h"
 #include <string>
+#include <memory>
 
 /*
 A Cruiser is a Warship with moderate speed, firepower, and resistance.
@@ -30,7 +31,7 @@ public:
 
 	void describe() const override;
 
-	void receive_hit(int hit_force, Ship *attacker_ptr) override;
+	void receive_hit(int hit_force, std::shared_ptr<Ship> attacker_ptr) override;
 
 };
 

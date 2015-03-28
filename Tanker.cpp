@@ -95,12 +95,12 @@ void Tanker::update()
             return;
         case State_tanker::MOVING_TO_LOAD:
             if (is_moving()) return;
-            dock(load_dest.lock());
+            dock(load_dest);
             tanker_state = State_tanker::LOADING;
             return;
         case State_tanker::MOVING_TO_UNLOAD:
             if (is_moving()) return;
-            dock(unload_dest.lock());
+            dock(unload_dest);
             tanker_state = State_tanker::UNLOADING;
             return;
         case State_tanker::LOADING:
@@ -173,13 +173,13 @@ void Tanker::start_cycle()
     {
         if (cargo == 0 && can_dock(load_dest))
         {
-            dock(load_dest.lock());
+            dock(load_dest);
             tanker_state = State_tanker::LOADING;
             return;
         }
         if (cargo > 0 && can_dock(unload_dest))
         {
-            dock(unload_dest.lock());
+            dock(unload_dest);
             tanker_state = State_tanker::UNLOADING;
             return;
         }

@@ -28,7 +28,7 @@ public:
 
 private:
     std::map<Point, std::shared_ptr<Island>> all_islands;        // all of the islands in the simulation
-    std::vector<Island> islands_left;                           // islands left in this cruise
+    std::vector<std::shared_ptr<Island>> islands_left;                           // islands left in this cruise
 
     std::shared_ptr<Island> first_island;   // the first island visited, to be returned to at the end of the cruise
     std::shared_ptr<Island> target_island;  // the island the ship is currently heading to

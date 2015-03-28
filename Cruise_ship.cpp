@@ -37,6 +37,7 @@ Cruise_ship::~Cruise_ship()
 void Cruise_ship::update()
 {
     Ship::update();
+
     switch (cruise_state)
     {
         case State_cruise_ship::OFF_CRUISE:
@@ -52,10 +53,15 @@ void Cruise_ship::update()
             }
             refuel();
             cruise_state = State_cruise_ship::SIGHTSEEING;
-            auto island_it = lower_bound(islands_left.begin(), islands_left.end(), target_island,
-                    [](shared_ptr<Island> first, shared_ptr<Island> second){return first->get_name() < second->get_name();});
-            assert(island_it != islands_left.end());
-            islands_left.erase(island_it);
+            // scope for declaring variables
+            {
+                auto island_it = lower_bound(islands_left.begin(), islands_left.end(), target_island,
+                        [](shared_ptr<Island> first, shared_ptr<Island> second) {
+                            return first->get_name() < second->get_name();
+                        });
+                assert(island_it != islands_left.end());
+                islands_left.erase(island_it);
+            }
             target_island.reset();
             return;
         case State_cruise_ship::SIGHTSEEING:
@@ -63,17 +69,18 @@ void Cruise_ship::update()
             cruise_state = State_cruise_ship::READY_TO_DEPART;
             return;
         case State_cruise_ship::READY_TO_DEPART:
-            double min_dist = -1;
-            target_island = first_island;
-            for (auto&& island : islands_left)
+            // scope for declaring variables
             {
-                double dist = cartesian_distance(get_location(), island->get_location());
-                // note: because we are iterating through islands_left in order,
-                // if there is a tie the first alphabetical island will be chosen
-                if (min_dist == -1 || dist < min_dist)
-                {
-                    min_dist = dist;
-                    target_island = island;
+                double min_dist = -1;
+                target_island = first_island;
+                for (auto &&island : islands_left) {
+                    double dist = cartesian_distance(get_location(), island->get_location());
+                    // note: because we are iterating through islands_left in order,
+                    // if there is a tie the first alphabetical island will be chosen
+                    if (min_dist == -1 || dist < min_dist) {
+                        min_dist = dist;
+                        target_island = island;
+                    }
                 }
             }
             // crash if for some reason the function call fails
@@ -109,7 +116,7 @@ void Cruise_ship::set_destination_position_and_speed(Point destination_position,
     Ship::set_destination_position_and_speed(destination_position, speed);
     auto island_it = all_islands.find(destination_position);
     if (island_it == all_islands.end()) return;
-    begin_cruise(speed, *island_it);
+    begin_cruise(speed, (*island_it).second);
 }
 
 // end cruise if necessary
@@ -126,7 +133,7 @@ void Cruise_ship::stop()
 
 void Cruise_ship::begin_cruise(double speed, shared_ptr<Island> island)
 {
-    islands_left(all_islands.begin(), all_islands.end());
+    for_each(all_islands.begin(), all_islands.end(), [this](pair<Point, shared_ptr<Island>> pair){islands_left.push_back(pair.second);});
     // islands_left will be in order by name because all_islands is in order by name
     first_island = island;
     target_island = island;

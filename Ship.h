@@ -65,7 +65,22 @@ public:
 
     // Return true if the ship is Stopped and the distance to the supplied island
     // is less than or equal to 0.1 nm
-    bool can_dock(shared_ptr<Island> island_ptr) const;
+    bool can_dock(std::shared_ptr<Island> island_ptr) const;
+
+    double get_fuel() const
+    {
+        return fuel;
+    }
+
+    double get_course() const
+    {
+        return track.get_course();
+    }
+
+    double get_speed() const
+    {
+        return track.get_speed();
+    }
 
     /*** Interface to derived classes ***/
     // Update the state of the Ship
@@ -134,7 +149,7 @@ protected:
     // return pointer to the Island currently docked at, or nullptr if not docked
     std::shared_ptr<Island> get_docked_Island() const
     {
-        return docked_at.lock();
+        return docked_at;
     }
 
 private:
