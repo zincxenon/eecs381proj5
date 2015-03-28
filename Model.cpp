@@ -87,6 +87,13 @@ Ship_ptr Model::get_ship_ptr(const std::string& name) const
     if (ship->get_name() != name) throw Error(SHIP_NOT_FOUND_MSG);
     return ship;
 }
+void Model::remove_ship(shared_ptr<Ship> ship)
+{
+    auto ship_it = get_ship_ptr(ship->get_name());
+    // calling get_ship_ptr performs a check on the validity of the ptr
+    ships.erase(ship_it);
+    objects.erase(ship->get_name().substr(0, SHORTEN_NAME_LENGTH));
+}
 
 // tell all objects to describe themselves
 void Model::describe() const
@@ -98,19 +105,6 @@ void Model::update()
 {
     ++time;
     for_each(objects.begin(), objects.end(), [](pair<string, Sim_object_ptr> pair){pair.second->update();});
-    vector<Ship_ptr> dead_ships;
-    for (auto&& ship_pair : ships)
-    {
-        if (ship_pair.second->is_on_the_bottom())
-        {
-            dead_ships.insert(dead_ships.end(), ship_pair.second);
-        }
-    }
-    for (auto&& dead_ship : dead_ships)
-    {
-        objects.erase(dead_ship->get_name().substr(0, SHORTEN_NAME_LENGTH));
-        ships.erase(dead_ship->get_name().substr(0, SHORTEN_NAME_LENGTH));
-    }
 }
 
 /* View services */

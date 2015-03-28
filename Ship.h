@@ -26,7 +26,7 @@ The is a "fat interface" for the capabilities of derived types of Ships. These
 functions are implemented in this class to throw an Error exception.
 */
 
-enum class State_ship {DOCKED, STOPPED, MOVING_TO_POSITION, MOVING_ON_COURSE, DEAD_IN_THE_WATER, SINKING, SUNK, ON_THE_BOTTOM};
+enum class State_ship {DOCKED, STOPPED, MOVING_TO_POSITION, MOVING_ON_COURSE, DEAD_IN_THE_WATER, SUNK};
 
 class Ship : public Sim_object {
 public:
@@ -60,13 +60,7 @@ public:
     // Return true if ship is afloat (not in process of sinking), false if not
     bool is_afloat() const
     {
-        return ship_state != State_ship::SINKING && ship_state != State_ship::SUNK && ship_state != State_ship::ON_THE_BOTTOM;
-    }
-
-    // Return true if ship is on the bottom
-    bool is_on_the_bottom() const
-    {
-        return ship_state == State_ship::ON_THE_BOTTOM;
+        return ship_state != State_ship::SUNK;
     }
 
     // Return true if the ship is Stopped and the distance to the supplied island

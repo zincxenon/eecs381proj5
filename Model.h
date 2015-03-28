@@ -71,6 +71,7 @@ public:
 	void add_ship(Ship_ptr);
 	// will throw Error("Ship not found!") if no ship of that name
 	Ship_ptr get_ship_ptr(const std::string& name) const;
+	void remove_ship(Ship_ptr ship);
 	
 	// tell all objects to describe themselves
 	void describe() const;

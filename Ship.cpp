@@ -48,25 +48,10 @@ bool Ship::can_dock(shared_ptr<Island> island_ptr) const
 // Update the state of the Ship
 void Ship::update()
 {
-	if (is_afloat() && resistance < 0)
-	{
-		ship_state = State_ship::SINKING;
-		docked_at.reset();
-		track.set_speed(0);
-		cout << get_name() << " sinking" << endl;
-		return;
-	}
 	switch(ship_state)
 	{
-		case State_ship::SINKING:
-			ship_state = State_ship::SUNK;
-			Model::get_Instance()->notify_gone(get_name());
-			cout << get_name() << " sunk" << endl;
-			break;
 		case State_ship::SUNK:
-			ship_state = State_ship::ON_THE_BOTTOM;
-		case State_ship::ON_THE_BOTTOM:
-			cout << get_name() << " on the bottom" << endl;
+			cout << get_name() << " sunk" << endl;
 			break;
 		case State_ship::MOVING_ON_COURSE:
 		case State_ship::MOVING_TO_POSITION:
@@ -92,14 +77,8 @@ void Ship::describe() const
 	cout << get_name() << " at " << get_location();
 	switch(ship_state)
 	{
-		case State_ship::SINKING:
-			cout << " sinking" << endl;
-			return;
 		case State_ship::SUNK:
 			cout << " sunk" << endl;
-			return;
-		case State_ship::ON_THE_BOTTOM:
-			cout << " on the bottom" << endl;
 			return;
 		default:
 			cout << ", fuel: " << fuel << " tons, resistance: " << resistance << endl;
@@ -251,6 +230,16 @@ void Ship::receive_hit(int hit_force, shared_ptr<Ship> attacker_ptr)
 {
 	resistance -= hit_force;
 	cout << get_name() << " hit with " << hit_force << ", resistance now " << resistance << endl;
+	if (resistance < 0)
+	{
+		ship_state = State_ship::SUNK;
+		docked_at.reset();
+		track.set_speed(0);
+		Model *model = Model::get_Instance();
+		model->notify_gone(get_name());
+		model->remove_ship(shared_from_this());
+		cout << get_name() << " sunk" << endl;
+	}
 }
 
 /* Private Function Definitions */

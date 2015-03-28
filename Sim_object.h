@@ -5,10 +5,11 @@ object's name, and has pure virtual accessor functions for the object's position
 and other information. */
 
 #include <string>
+#include <memory>
 
 struct Point;
 
-class Sim_object {
+class Sim_object : public std::enable_shared_from_this<Sim_object> {
 public:
 
     virtual ~Sim_object();

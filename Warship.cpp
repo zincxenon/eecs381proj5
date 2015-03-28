@@ -29,7 +29,7 @@ void Warship::update()
 {
     Ship::update();
     if (warship_state == State_warship::NOT_ATTACKING) return;
-    if (!is_afloat() || !target->is_afloat())
+    if (!is_afloat() || !target || !target->is_afloat())
     {
         stop_attack();
     }
@@ -47,7 +47,7 @@ void Warship::update()
 void Warship::attack(shared_ptr<Ship> target_ptr_)
 {
     if (!is_afloat()) throw Error("Cannot attack!");
-    if (target_ptr_ == this) throw Error("Warship may not attack itself!");
+    if (target_ptr_ == shared_from_this()) throw Error("Warship may not attack itself!");
     if (target_ptr_ == target) throw Error("Already attacking this target!");
     target = target_ptr_;
     warship_state = State_warship::ATTACKING;
@@ -68,7 +68,9 @@ void Warship::describe() const
     Ship::describe();
     if (warship_state == State_warship::ATTACKING)
     {
-        cout << "Attacking " << target->get_name() << endl;
+        string target_output = "absent ship";
+        if (target) target_output = target->get_name();
+        cout << "Attacking " << target_output << endl;
     }
 }
 
@@ -76,5 +78,5 @@ void Warship::describe() const
 void Warship::fire_at_target()
 {
     cout << get_name() << " fires" << endl;
-    target->receive_hit(firepower, this);
+    target->receive_hit(firepower, shared_from_this());
 }

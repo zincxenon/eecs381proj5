@@ -46,7 +46,8 @@ struct Point
 
 	// compare two Points
 	bool operator== (const Point& rhs) const;
-	bool operator!= (const Point& rhs) const;	
+	bool operator!= (const Point& rhs) const;
+	bool operator< (const Point& rhs) const;
 };
 
 // return the distance between two Points

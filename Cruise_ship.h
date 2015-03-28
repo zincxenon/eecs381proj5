@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 
-enum class State_cruise_ship {OFF_CRUISE, TRAVELING_TO_ISLAND, REFUELING, SIGHTSEEING};
+enum class State_cruise_ship {OFF_CRUISE, TRAVELING_TO_ISLAND, SIGHTSEEING, READY_TO_DEPART};
 
 class Cruise_ship : public Ship {
 public:
@@ -31,12 +31,14 @@ private:
     std::vector<Island> islands_left;                           // islands left in this cruise
 
     std::shared_ptr<Island> first_island;   // the first island visited, to be returned to at the end of the cruise
+    std::shared_ptr<Island> target_island;  // the island the ship is currently heading to
 
     double cruise_speed;
     State_cruise_ship  cruise_state;
 
-    void begin_cruise(std::shared_ptr<Island> island);
+    void begin_cruise(double speed, std::shared_ptr<Island> island);
     void end_cruise();
+    void check_and_cancel_cruise();
 };
 
 #endif

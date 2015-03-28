@@ -52,5 +52,5 @@ void Cruiser::describe() const
 void Cruiser::receive_hit(int hit_force, Ship *attacker_ptr)
 {
     Ship::receive_hit(hit_force, attacker_ptr);
-    if (!is_attacking()) attack(attacker_ptr);
+    if (is_afloat() && !is_attacking()) attack(attacker_ptr);
 }

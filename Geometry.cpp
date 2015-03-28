@@ -27,6 +27,11 @@ bool Point::operator!= (const Point& rhs) const
 	return (x != rhs.x || y != rhs.y);
 }
 
+bool Point::operator< (const Point& rhs) const
+{
+	return x == rhs.x ? y < rhs.y : x < rhs.x;
+}
+
 // return the distance between two Points
 double cartesian_distance (const Point& p1, const Point& p2)
 {
