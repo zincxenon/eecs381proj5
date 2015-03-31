@@ -56,7 +56,6 @@ void Ship::update()
 		case State_ship::MOVING_ON_COURSE:
 		case State_ship::MOVING_TO_POSITION:
 			calculate_movement();
-			Model::get_Instance()->notify_location(get_name(), get_location());
 			cout << get_name() << " now at " << get_location() << endl;
 			break;
 		case State_ship::STOPPED:
@@ -114,7 +113,10 @@ void Ship::describe() const
 
 void Ship::broadcast_current_state()
 {
-	Model::get_Instance()->notify_location(get_name(), get_location());
+	Model *model = Model::get_Instance();
+	model->notify_location_ship(get_name(), get_location());
+	model->notify_course_speed(get_name(), track.get_course(), track.get_speed());
+	model->notify_fuel(get_name(), fuel);
 }
 
 /*** Command functions ***/
@@ -128,6 +130,7 @@ void Ship::set_destination_position_and_speed(Point destination_position, double
 	Compass_vector compass(get_location(), destination);
 	track.set_course(compass.direction);
 	track.set_speed(speed);
+	Model::get_Instance()->notify_course_speed(get_name(), track.get_course(), track.get_speed());
 	ship_state = State_ship::MOVING_TO_POSITION;
 	docked_at.reset();
 	cout << get_name() << " will sail on ";
@@ -143,6 +146,7 @@ void Ship::set_course_and_speed(double course, double speed)
 	check_movement_and_speed(speed);
 	track.set_course(course);
 	track.set_speed(speed);
+	Model::get_Instance()->notify_course_speed(get_name(), track.get_course(), track.get_speed());
 	ship_state = State_ship::MOVING_ON_COURSE;
 	docked_at.reset();
 	cout << get_name() << " will sail on ";
@@ -159,6 +163,7 @@ void Ship::stop()
 		throw Error("Ship cannot move!");
 	}
 	track.set_speed(0);
+	Model::get_Instance()->notify_course_speed(get_name(), track.get_course(), track.get_speed());
 	ship_state = State_ship::STOPPED;
 	docked_at.reset();
 	cout << get_name() << " stopping at " << get_location() << endl;
@@ -174,9 +179,9 @@ void Ship::dock(shared_ptr<Island> island_ptr)
 		throw Error("Can't dock!");
 	}
 	track.set_position(island_ptr->get_location());
+	Model::get_Instance()->notify_location_ship(get_name(), get_location());
 	docked_at = island_ptr;
 	ship_state = State_ship::DOCKED;
-	Model::get_Instance()->notify_location(get_name(), get_location());
 	cout << get_name() << " docked at " << island_ptr->get_name() << endl;
 }
 
@@ -195,6 +200,7 @@ void Ship::refuel()
 		return;
 	}
 	fuel += docked_at->provide_fuel(fuel_needed);
+	Model::get_Instance()->notify_fuel(get_name(), fuel);
 	cout << get_name() << " now has " << fuel << " tons of fuel" << endl;
 }
 
@@ -311,6 +317,7 @@ void Ship::calculate_movement()
 			fuel -= full_fuel_required;
 		}
 	}
+	broadcast_current_state();
 }
 
 // Check if the ship can move and the speed is within the max, and throws errors otherwise

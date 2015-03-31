@@ -11,7 +11,7 @@ Represents the interface for a view to be displayed to the user
 
 class View {
 public:
-	~View();	// outputs destructor message
+	virtual ~View();	// outputs destructor message
 
 	// Save the supplied name and information for future use in a draw() call
 	// If the name is already present,the new location replaces the previous one.
@@ -24,18 +24,10 @@ public:
 	virtual void update_remove_ship(const std::string& name) {}
 
 	// prints out the view
-	virtual void draw() {}
+	virtual void draw() = 0;
 
 	// Discard the saved information - drawing will show only a empty pattern
 	virtual void clear() {}
-
-	// modify the display parameters
-	virtual void set_size(int size_) {}
-	virtual void set_scale(double scale_) {}
-	virtual void set_origin(Point origin_) {}
-
-	// set the parameters to the default values
-	virtual void set_defaults() {}
 
 protected:
 	View();		// outputs constructor message

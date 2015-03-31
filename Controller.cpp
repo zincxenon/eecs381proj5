@@ -3,6 +3,8 @@
 #include "Model.h"
 #include "View.h"
 #include "View_map.h"
+#include "View_sail.h"
+#include "View_bridge.h"
 #include "Ship.h"
 #include "Island.h"
 #include "Geometry.h"
@@ -10,12 +12,9 @@
 #include "Utility.h"
 #include <algorithm>
 #include <cassert>
-#include <string>
 #include <iostream>
 #include <functional>
-#include <map>
 #include <limits>
-#include <memory>
 
 using namespace std;
 using namespace placeholders;
@@ -37,8 +36,6 @@ Controller::~Controller()
 // create View object, run the program by accepting user commands, then destroy View object
 void Controller::run()
 {
-    shared_ptr<View> view(make_shared<View_map>()); // make map view here
-    Model::get_Instance()->attach(view);
     while (true)
     {
         try
@@ -125,41 +122,103 @@ shared_ptr<Island> Controller::read_island()
 bool Controller::quit()
 {
     Model *model = Model::get_Instance();
-    for_each(views.begin(), views.end(), [model](shared_ptr<View> view){model->detach(view);});
+    for_each(views.begin(), views.end(), [model](weak_ptr<View> view){model->detach(view.lock());});
     cout << "Done" << endl;
     return true;
 }
 
 // view functions
-bool Controller::view_default()
+bool Controller::view_show()
 {
-    for_each(views.begin(), views.end(), mem_fn(&View::set_defaults));
+    // first, remove all expired views from the list of views
+    views.erase(remove_if(views.begin(), views.end(), mem_fn(&weak_ptr<View>::expired)));
+    // now, draw every view
+    for_each(views.begin(), views.end(), [](weak_ptr<View> view){view.lock()->draw();});
     return false;
 }
-bool Controller::view_size()
+bool Controller::view_map_open()
+{
+    if (view_map) throw Error("Map view is already open!");
+    view_map = make_shared<View_map>();
+    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_map>(view_map);
+    Model::get_Instance()->attach(view_ptr);
+    views.push_back(weak_ptr<View>(view_ptr));
+    return false;
+}
+bool Controller::view_map_close()
+{
+    if (!view_map) throw Error("Map view is not open!");
+    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_map>(view_map));
+    view_map.reset();
+    return false;
+}
+bool Controller::view_sail_open()
+{
+    if (view_sail) throw Error("Sailing data view is already open!");
+    view_sail = make_shared<View_sail>();
+    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_sail>(view_sail);
+    Model::get_Instance()->attach(view_ptr);
+    views.push_back(weak_ptr<View>(view_ptr));
+    return false;
+}
+bool Controller::view_sail_close()
+{
+    if (!view_sail) throw Error("Sailing data view is not open!");
+    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_sail>(view_sail));
+    view_sail.reset();
+    return false;
+}
+bool Controller::view_bridge_open()
+{
+    string name;
+    cin >> name;
+    if (bridge_views.find(name) != bridge_views.end()) throw Error("Bridge view is already open for that ship!");
+    shared_ptr<View_bridge> bridge_view = make_shared<View_bridge>(name);
+    bridge_views[name] = bridge_view;
+    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_bridge>(bridge_view);
+    Model::get_Instance()->attach(view_ptr);
+    views.push_back(view_ptr);
+    return false;
+}
+bool Controller::view_bridge_close()
+{
+    string name;
+    cin >> name;
+    auto view_it = bridge_views.find(name);
+    if (view_it == bridge_views.end()) throw Error("Bridge view for that ship is not open!");
+    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_bridge>((*view_it).second));
+    bridge_views.erase(view_it);
+    return false;
+}
+
+// view_map functions
+bool Controller::view_map_default()
+{
+    if (!view_map) throw Error("Map view is not open!");
+    view_map->set_defaults();
+    return false;
+}
+bool Controller::view_map_size()
 {
     int new_size = read_int();
-    for_each(views.begin(), views.end(), bind(&View::set_size, _1, new_size));
+    if (!view_map) throw Error("Map view is not open!");
+    view_map->set_size(new_size);
     return false;
 }
-bool Controller::view_zoom()
+bool Controller::view_map_zoom()
 {
     double new_scale = read_double();
-    for_each(views.begin(), views.end(), bind(&View::set_scale, _1, new_scale));
+    if (!view_map) throw Error("Map view is not open!");
+    view_map->set_scale(new_scale);
     return false;
 }
-bool Controller::view_pan()
+bool Controller::view_map_pan()
 {
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
-    Point new_point(point_x, point_y);
-    for_each(views.begin(), views.end(), bind(&View::set_origin, _1, new_point));
-    return false;
-}
-bool Controller::view_show()
-{
-    for_each(views.begin(), views.end(), mem_fn(&View::draw));
+    if (!view_map) throw Error("Map view is not open!");
+    view_map->set_origin(Point(point_x, point_y));
     return false;
 }
 

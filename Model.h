@@ -5,13 +5,13 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include "Geometry.h"
 #include "Utility.h"
 
 class Sim_object;
 class Ship;
 class Island;
 class View;
-struct Point;
 
 /*
 Model is part of a simplified Model-View-Controller pattern.
@@ -85,11 +85,15 @@ public:
 	// Detach the View by discarding the supplied pointer from the container of Views
     // - no updates sent to it thereafter.
 	void detach(std::shared_ptr<View>);
-	
-    // notify the views about an object's location
-	void notify_location(const std::string& name, Point location);
+
+	// notify the views about a ship's location
+	void notify_location_ship(const std::string &name, Point location);
 	// notify the views that an object is now gone
 	void notify_gone(const std::string& name);
+	// notify the views that a ship has changed fuel
+	void notify_fuel(const std::string& name, double fuel);
+	// notify the views that a ship has changed course and speed
+	void notify_course_speed(const std::string& name, double course, double speed);
 
 	// disallow copy/move construction or assignment
 	Model(const Model&) = delete;

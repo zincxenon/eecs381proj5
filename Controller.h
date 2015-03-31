@@ -8,6 +8,9 @@
 
 class Model;
 class View;
+class View_map;
+class View_sail;
+class View_bridge;
 class Ship;
 class Island;
 
@@ -26,7 +29,10 @@ public:
 	void run();
 
 private:
-	std::vector<std::shared_ptr<View>> views;
+	std::vector<std::weak_ptr<View>> views;
+	std::shared_ptr<View_map> view_map;
+	std::shared_ptr<View_sail> view_sail;
+	std::map<std::string, std::shared_ptr<View_bridge>> bridge_views;
 
 	// helper functions
 	int read_int();
@@ -41,11 +47,19 @@ private:
 	bool quit();
 
 	// view functions
-	bool view_default();
-	bool view_size();
-	bool view_zoom();
-	bool view_pan();
 	bool view_show();
+	bool view_map_open();
+	bool view_map_close();
+	bool view_sail_open();
+	bool view_sail_close();
+	bool view_bridge_open();
+	bool view_bridge_close();
+
+	// view_map functions
+	bool view_map_default();
+	bool view_map_size();
+	bool view_map_zoom();
+	bool view_map_pan();
 
 	// model functions
 	bool model_status();
@@ -68,11 +82,18 @@ private:
 	std::map<std::string, command_func> command_func_map {
 			{"quit", &Controller::quit},
 
-			{"default", &Controller::view_default},
-			{"size", &Controller::view_size},
-			{"zoom", &Controller::view_zoom},
-			{"pan", &Controller::view_pan},
 			{"show", &Controller::view_show},
+			{"open_map_view", &Controller::view_map_open},
+			{"close_map_view", &Controller::view_map_close},
+			{"open_sailing_view", &Controller::view_sail_open},
+			{"close_sailing_view", &Controller::view_sail_close},
+			{"open_bridge_view", &Controller::view_bridge_open},
+			{"close_bridge_view", &Controller::view_bridge_close},
+
+			{"default", &Controller::view_map_default},
+			{"size", &Controller::view_map_size},
+			{"zoom", &Controller::view_map_zoom},
+			{"pan", &Controller::view_map_pan},
 
 			{"status", &Controller::model_status},
 			{"go", &Controller::model_go},

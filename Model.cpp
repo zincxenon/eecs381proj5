@@ -80,7 +80,7 @@ void Model::add_ship(Model::Ship_ptr ship)
     string shortened_name = ship->get_name().substr(0, SHORTEN_NAME_LENGTH);
     ships[shortened_name] = ship;
     objects[shortened_name] = ship;
-    notify_location(ship->get_name(), ship->get_location());
+    notify_location_ship(ship->get_name(), ship->get_location());
 }
 // will throw Error("Ship not found!") if no ship of that name
 Model::Ship_ptr Model::get_ship_ptr(const std::string& name) const
@@ -132,7 +132,7 @@ void Model::detach(shared_ptr<View> view)
 }
 
 // notify the views about an object's location
-void Model::notify_location(const std::string& name, Point location)
+void Model::notify_location_ship(const std::string &name, Point location)
 {
     for_each(views.begin(), views.end(), bind(&View::update_location_ship, _1, name, location));
 }
@@ -140,4 +140,14 @@ void Model::notify_location(const std::string& name, Point location)
 void Model::notify_gone(const std::string& name)
 {
     for_each(views.begin(), views.end(), bind(&View::update_remove_ship, _1, name));
+}
+// notify the views that a ship has changed fuel
+void Model::notify_fuel(const std::string& name, double fuel)
+{
+    for_each(views.begin(), views.end(), bind(&View::update_fuel, _1, name, fuel));
+}
+// notify the views that a ship has changed course and speed
+void Model::notify_course_speed(const std::string& name, double course, double speed)
+{
+    for_each(views.begin(), views.end(), bind(&View::update_course_and_speed, _1, name, course, speed));
 }

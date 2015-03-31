@@ -52,5 +52,5 @@ void Island::describe() const
 // ask model to notify views of current state
 void Island::broadcast_current_state()
 {
-    Model::get_Instance()->notify_location(get_name(), position);
+    Model::get_Instance()->notify_location_ship(get_name(), position);
 }

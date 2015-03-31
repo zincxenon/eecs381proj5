@@ -1,11 +1,8 @@
 #include "View_map.h"
-#include "Geometry.h"
 #include "Utility.h"
-#include <string>
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <map>
 #include <functional>
 #include <algorithm>
 
@@ -30,24 +27,6 @@ View_map::View_map()
 View_map::~View_map()
 {
     cout << "View_map destructed" << endl;
-}
-
-// Save the supplied name and location for future use in a draw() call
-// If the name is already present,the new location replaces the previous one.
-void View_map::update_location_ship(const std::string& name, Point location)
-{
-    object_data[name] = location;
-}
-void View_map::update_location_island(const std::string& name, Point location)
-{
-    object_data[name] = location;
-}
-
-// Remove the name and its location; no error if the name is not present.
-void View_map::update_remove_ship(const std::string& name)
-{
-    auto object_it = object_data.find(name);
-    if (object_it != object_data.end()) object_data.erase(object_it);
 }
 
 // prints out the current map
