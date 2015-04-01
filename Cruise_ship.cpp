@@ -18,6 +18,11 @@ Cruise_ship::Cruise_ship(const std::string &name_, Point position_) :
 {
     Model::Island_map island_map = Model::get_Instance()->get_islands();
     for (auto&& island_pair : island_map) all_islands[island_pair.second->get_location()] = island_pair.second;
+    for (auto&& island : all_islands)
+    {
+        auto island_it = lower_bound(islands_left.begin(), islands_left.end(), island.second, island_name_compare);
+        all_islands_in_order.insert(island_it, island.second);
+    }
     if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Cruise ship " << get_name() << " constructed" << endl;
 }
 
@@ -126,13 +131,9 @@ void Cruise_ship::stop()
 
 void Cruise_ship::begin_cruise(double speed, shared_ptr<Island> island)
 {
-    //islands_left.push_back(pair.second);
-    for (auto&& island : all_islands)
-    {
-        auto island_it = lower_bound(islands_left.begin(), islands_left.end(), island.second, island_name_compare);
-        islands_left.insert(island_it, island.second);
-    }
-    //for_each(all_islands.begin(), all_islands.end(), [this](pair<Point, shared_ptr<Island>> pair){});
+    assert(cruise_state == State_cruise_ship::OFF_CRUISE);
+    islands_left.clear();
+    islands_left.insert(islands_left.begin(), all_islands_in_order.begin(), all_islands_in_order.end());
     // islands_left will be in order by name because all_islands is in order by name
     first_island = island;
     target_island = island;
@@ -143,6 +144,7 @@ void Cruise_ship::begin_cruise(double speed, shared_ptr<Island> island)
 }
 void Cruise_ship::end_cruise()
 {
+    assert(cruise_state != State_cruise_ship::OFF_CRUISE);
     islands_left.clear();
     first_island.reset();
     target_island.reset();

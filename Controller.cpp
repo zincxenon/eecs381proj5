@@ -167,10 +167,12 @@ bool Controller::view_bridge_open()
     string name;
     cin >> name;
     if (bridge_views.find(name) != bridge_views.end()) throw Error("Bridge view is already open for that ship!");
-    shared_ptr<View_bridge> bridge_view = make_shared<View_bridge>(name);
+    Model *model = Model::get_Instance();
+    shared_ptr<Ship> ship = model->get_ship_ptr(name); // make sure ship exists!
+    shared_ptr<View_bridge> bridge_view = make_shared<View_bridge>(ship->get_name());
     bridge_views[name] = bridge_view;
     shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_bridge>(bridge_view);
-    Model::get_Instance()->attach(view_ptr);
+    model->attach(view_ptr);
     views.push_back(view_ptr);
     return false;
 }
