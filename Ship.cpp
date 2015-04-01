@@ -15,7 +15,7 @@ Ship::Ship(const string &name_, Point position_, double fuel_capacity_,
 		fuel_capacity(fuel_capacity_), track(position_, Course_speed(0, 0)), max_speed(maximum_speed_),
 		resistance(resistance_), ship_state(State_ship::STOPPED)
 {
-    cout << "Ship " << get_name() << " constructed" << endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Ship " << get_name() << " constructed" << endl;
 }
 
 /*
@@ -28,7 +28,7 @@ are defining it just to get the destructor message output.
 
 Ship::~Ship()
 {
-    cout << "Ship "  << get_name() << " destructed" << endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Ship "  << get_name() << " destructed" << endl;
 }
 
 // Return true if the ship is Stopped and the distance to the supplied island

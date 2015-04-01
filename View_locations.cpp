@@ -1,15 +1,16 @@
 #include "View_locations.h"
+#include "Utility.h"
 #include <iostream>
 
 using namespace std;
 
 View_locations::View_locations() : View()
 {
-    cout << "View_locations constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations constructed" << endl;
 }
 View_locations::~View_locations()
 {
-    cout << "View_locations destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations destructed" << endl;
 }
 
 // Save the supplied name and information for future use in a draw() call

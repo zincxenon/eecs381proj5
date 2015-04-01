@@ -39,10 +39,10 @@ Navigation.o: Navigation.h Navigation.cpp Geometry.h
 Ship.o: Ship.h Ship.cpp Model.h Geometry.h Navigation.h Track_base.h Utility.h Island.h
 	$(CC) $(CFLAGS) Ship.cpp
 
-Ship_factory.o: Ship_factory.h Ship_factory.cpp Geometry.h Ship.h Tanker.h Cruiser.h Cruise_ship.h Utility.h
+Ship_factory.o: Ship_factory.h Ship_factory.cpp Geometry.h Ship.h Tanker.h Cruiser.h Cruise_ship.h
 	$(CC) $(CFLAGS) Ship_factory.cpp
 
-Sim_object.o: Sim_object.h Sim_object.cpp
+Sim_object.o: Sim_object.h Sim_object.cpp Utility.h
 	$(CC) $(CFLAGS) Sim_object.cpp
 
 Tanker.o: Tanker.h Tanker.cpp Ship.h Geometry.h Island.h

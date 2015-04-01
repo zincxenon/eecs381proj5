@@ -20,13 +20,13 @@ Tanker::Tanker(const std::string &name_, Point position_) :
         cargo(TANKER_INIT_CARGO), cargo_capacity(TANKER_CARGO_CAPACITY),
         tanker_state(State_tanker::NO_CARGO_DEST)
 {
-    cout << "Tanker " << get_name() << " constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Tanker " << get_name() << " constructed" << endl;
 }
 
 // output destructor message
 Tanker::~Tanker()
 {
-    cout << "Tanker " << get_name() << " destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Tanker " << get_name() << " destructed" << endl;
 }
 
 // This class overrides these Ship functions so that it can check if this Tanker has assigned cargo destinations.

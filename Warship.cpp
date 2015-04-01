@@ -11,14 +11,14 @@ Warship::Warship(const string& name_, Point position_, double fuel_capacity_,
         Ship(name_, position_, fuel_capacity_, maximum_speed_, fuel_consumption_, resistance_),
         firepower(firepower_), max_range(maximum_range_), warship_state(State_warship::NOT_ATTACKING), target()
 {
-    cout << "Warship " << get_name() << " constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Warship " << get_name() << " constructed" << endl;
 }
 
 // a pure virtual function to mark this as an abstract class,
 // but defined anyway to output destructor message
 Warship::~Warship()
 {
-    cout << "Warship " << get_name() << " destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Warship " << get_name() << " destructed" << endl;
 }
 
 // perform warship-specific behavior

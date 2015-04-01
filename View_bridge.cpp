@@ -27,11 +27,11 @@ const double VIEW_BRIDGE_HALF = 180;
 
 View_bridge::View_bridge(std::string& name) : View_locations(), target(name), target_sunk(false)
 {
-    cout << "View_bridge constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_bridge constructed" << endl;
 }
 View_bridge::~View_bridge()
 {
-    cout << "View_bridge destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_bridge destructed" << endl;
 }
 
 void View_bridge::update_course_and_speed(const std::string& name, double course, double speed)

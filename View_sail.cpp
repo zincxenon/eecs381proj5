@@ -1,4 +1,5 @@
 #include "View_sail.h"
+#include "Utility.h"
 #include <iostream>
 #include <iomanip>
 
@@ -8,11 +9,11 @@ const int VIEW_SAIL_FIELD_SIZE = 10;
 
 View_sail::View_sail() : View()
 {
-    cout << "View_sail constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail constructed" << endl;
 }
 View_sail::~View_sail()
 {
-    cout << "View_sail destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail destructed" << endl;
 }
 
 void View_sail::update_course_and_speed(const std::string& name, double course, double speed)

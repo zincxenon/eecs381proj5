@@ -18,12 +18,12 @@ Cruise_ship::Cruise_ship(const std::string &name_, Point position_) :
 {
     Model::Island_map island_map = Model::get_Instance()->get_islands();
     for (auto&& island_pair : island_map) all_islands[island_pair.second->get_location()] = island_pair.second;
-    cout << "Cruise ship " << get_name() << " constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Cruise ship " << get_name() << " constructed" << endl;
 }
 
 Cruise_ship::~Cruise_ship()
 {
-    cout << "Cruise ship " << get_name() << " destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Cruise ship " << get_name() << " destructed" << endl;
 }
 
 void Cruise_ship::update()

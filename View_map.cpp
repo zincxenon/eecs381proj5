@@ -21,12 +21,12 @@ const int VIEW_MAP_AXIS_LABEL_MAX = 4;
 View_map::View_map() : View_locations()
 {
     set_defaults();
-    cout << "View_map constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_map constructed" << endl;
 }
 // outputs destructor message
 View_map::~View_map()
 {
-    cout << "View_map destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_map destructed" << endl;
 }
 
 // prints out the current map

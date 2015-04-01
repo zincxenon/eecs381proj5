@@ -44,7 +44,7 @@ Model::Model() : time(0)
     add_ship(create_ship("Xerxes", "Cruiser", Point (25, 25)));
     add_ship(create_ship("Valdez", "Tanker", Point (30, 30)));
 
-    cout << "Model constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Model constructed" << endl;
 }
 
 // destroy all objects, output destructor message
@@ -54,7 +54,7 @@ Model::~Model()
     ships.clear();
     islands.clear();
     views.clear();
-    cout << "Model destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Model destructed" << endl;
 }
 
 // will throw Error("Island not found!") if no island of that name

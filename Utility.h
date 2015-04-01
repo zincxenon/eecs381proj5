@@ -14,8 +14,8 @@ private:
 };
 
 /* add any of your own declarations here */
+const bool SHOW_CONSTRUCTOR_DESTRUCTOR_MSG = false;
 const double REFUEL_MIN = .005;
-
 // length used by model and view to represent names
 const int SHORTEN_NAME_LENGTH = 2;
 

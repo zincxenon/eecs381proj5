@@ -1,14 +1,15 @@
 #include "View.h"
+#include "Utility.h"
 #include <iostream>
 
 using namespace std;
 
 View::View()
 {
-    cout << "View constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View constructed" << endl;
 }
 
 View::~View()
 {
-    cout << "View destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View destructed" << endl;
 }

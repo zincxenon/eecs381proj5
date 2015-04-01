@@ -1,5 +1,4 @@
 #include "Controller.h"
-
 #include "Model.h"
 #include "View.h"
 #include "View_map.h"
@@ -20,12 +19,12 @@ const int MAX_COURSE_DEGREES = 360;
 // output constructor message
 Controller::Controller()
 {
-    cout << "Controller constructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Controller constructed" << endl;
 }
 // output destructor message
 Controller::~Controller()
 {
-    cout << "Controller destructed" << endl;
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Controller destructed" << endl;
 }
 
 // create View object, run the program by accepting user commands, then destroy View object
