@@ -54,7 +54,7 @@ void Cruise_ship::update()
                         [](shared_ptr<Island> first, shared_ptr<Island> second) {
                             return first->get_name() < second->get_name();
                         });
-                assert(island_it != islands_left.end());
+                assert((*island_it)->get_name() == target_island->get_name() && island_it != islands_left.end());
                 islands_left.erase(island_it);
             }
             target_island.reset();
