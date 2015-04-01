@@ -5,7 +5,7 @@ CFLAGS = -c -pedantic-errors -std=c++11 -Wall -g
 LFLAGS = -pedantic -Wall
 
 OBJS = p5_main.o Controller.o Cruise_ship.o Cruiser.o Geometry.o Island.o Model.o Navigation.o Ship.o Ship_factory.o Sim_object.o Tanker.o Track_base.o Utility.o View.o View_bridge.o View_locations.o View_map.o View_sail.o Warship.o
-PROG = p4exe
+PROG = p5exe
 
 default: $(PROG)
 
