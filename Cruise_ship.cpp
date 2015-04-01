@@ -1,15 +1,8 @@
 #include "Cruise_ship.h"
-#include "Ship.h"
 #include "Island.h"
-#include "Model.h"
-#include "Geometry.h"
-#include "Utility.h"
-#include <string>
 #include <cassert>
 #include <algorithm>
 #include <iostream>
-#include <vector>
-#include <memory>
 
 using namespace std;
 

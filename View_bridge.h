@@ -1,10 +1,10 @@
 #ifndef VIEW_BRIDGE_H
 #define VIEW_BRIDGE_H
 
+#include "View_locations.h"
+#include "Geometry.h"
 #include <string>
 #include <map>
-#include "Geometry.h"
-#include "View_locations.h"
 
 class View_bridge : public View_locations {
 public:

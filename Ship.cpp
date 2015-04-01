@@ -1,10 +1,5 @@
 #include "Ship.h"
-#include "Model.h"
-#include "Geometry.h"
-#include "Navigation.h"
-#include "Utility.h"
 #include "Island.h"
-#include <string>
 #include <sstream>
 #include <iostream>
 #include <cassert>

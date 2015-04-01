@@ -1,10 +1,5 @@
 #include "Cruiser.h"
-#include "Warship.h"
-#include "Ship.h"
-#include "Geometry.h"
-#include <string>
 #include <iostream>
-#include <memory>
 
 using namespace std;
 

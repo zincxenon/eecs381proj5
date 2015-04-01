@@ -1,8 +1,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <string>
 #include "Geometry.h"
+#include <string>
 
 /* *** View class ***
 Represents the interface for a view to be displayed to the user

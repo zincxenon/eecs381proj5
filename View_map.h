@@ -1,10 +1,10 @@
 #ifndef VIEW_MAP_H
 #define VIEW_MAP_H
 
-#include <string>
-#include <map>
 #include "Geometry.h"
 #include "View_locations.h"
+#include <string>
+#include <map>
 
 /* *** View class ***
 The View class encapsulates the data and functions needed to generate the map

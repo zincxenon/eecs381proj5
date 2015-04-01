@@ -1,11 +1,11 @@
 #include "View_bridge.h"
+#include "Navigation.h"
+#include "Utility.h"
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <cassert>
 #include <cmath>
-#include "Navigation.h"
-#include "Utility.h"
 
 using namespace std;
 

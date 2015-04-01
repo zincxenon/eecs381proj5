@@ -1,5 +1,4 @@
 #include "Sim_object.h"
-#include <string>
 #include <iostream>
 
 using namespace std;

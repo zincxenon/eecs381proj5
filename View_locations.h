@@ -1,10 +1,10 @@
 #ifndef VIEW_LOCATIONS_H
 #define VIEW_LOCATIONS_H
 
-#include <string>
-#include <map>
 #include "Geometry.h"
 #include "View.h"
+#include <string>
+#include <map>
 
 /* this subclass is used by Views which get their data from a map of object name to location data */
 class View_locations : public View {

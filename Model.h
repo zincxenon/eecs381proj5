@@ -1,12 +1,12 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "Geometry.h"
+#include "Utility.h"
 #include <string>
 #include <map>
 #include <vector>
 #include <memory>
-#include "Geometry.h"
-#include "Utility.h"
 
 class Sim_object;
 class Ship;
@@ -88,6 +88,8 @@ public:
 
 	// notify the views about a ship's location
 	void notify_location_ship(const std::string &name, Point location);
+	// notify the views about a island's location
+	void notify_location_island(const std::string &name, Point location);
 	// notify the views that an object is now gone
 	void notify_gone(const std::string& name);
 	// notify the views that a ship has changed fuel

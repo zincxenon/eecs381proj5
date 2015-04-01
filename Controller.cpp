@@ -7,14 +7,9 @@
 #include "View_bridge.h"
 #include "Ship.h"
 #include "Island.h"
-#include "Geometry.h"
 #include "Ship_factory.h"
-#include "Utility.h"
 #include <algorithm>
-#include <cassert>
 #include <iostream>
-#include <functional>
-#include <limits>
 
 using namespace std;
 using namespace placeholders;

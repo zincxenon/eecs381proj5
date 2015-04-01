@@ -1,10 +1,10 @@
 #ifndef VIEW_SAILING_H
 #define VIEW_SAILING_H
 
-#include <string>
-#include <map>
 #include "Geometry.h"
 #include "View.h"
+#include <string>
+#include <map>
 #include <cassert>
 
 /* *** Sailing View class ***

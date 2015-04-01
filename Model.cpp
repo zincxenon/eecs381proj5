@@ -1,16 +1,10 @@
 #include "Model.h"
-#include <string>
-#include <map>
-#include <iostream>
-#include <vector>
-#include <functional>
-#include <algorithm>
-#include <memory>
 #include "Ship.h"
 #include "Island.h"
 #include "View.h"
-#include "Geometry.h"
 #include "Ship_factory.h"
+#include <iostream>
+#include <algorithm>
 
 using namespace std;
 using namespace placeholders;
@@ -119,10 +113,7 @@ void Model::update()
 void Model::attach(shared_ptr<View> view)
 {
     views.push_back(view);
-    for_each(ships.begin(), ships.end(), [view](pair<string, Ship_ptr> pair){view->update_location_ship(pair.second->get_name(), pair.second->get_location());});
-    for_each(ships.begin(), ships.end(), [view](pair<string, Ship_ptr> pair){view->update_course_and_speed(pair.second->get_name(), pair.second->get_course(), pair.second->get_speed());});
-    for_each(ships.begin(), ships.end(), [view](pair<string, Ship_ptr> pair){view->update_fuel(pair.second->get_name(), pair.second->get_fuel());});
-    for_each(islands.begin(), islands.end(), [view](pair<string, Island_ptr> pair){view->update_location_island(pair.second->get_name(), pair.second->get_location());});
+    for_each(objects.begin(), objects.end(), [view](pair<string, Sim_object_ptr> pair){pair.second->broadcast_current_state();});
 }
 // Detach the View by discarding the supplied pointer from the container of Views
 // - no updates sent to it thereafter.
@@ -131,10 +122,15 @@ void Model::detach(shared_ptr<View> view)
     views.erase(find(views.begin(), views.end(), view));
 }
 
-// notify the views about an object's location
+// notify the views about a ship's location
 void Model::notify_location_ship(const std::string &name, Point location)
 {
     for_each(views.begin(), views.end(), bind(&View::update_location_ship, _1, name, location));
+}
+// notify the views about an island's location
+void Model::notify_location_island(const std::string &name, Point location)
+{
+    for_each(views.begin(), views.end(), bind(&View::update_location_island, _1, name, location));
 }
 // notify the views that an object is now gone
 void Model::notify_gone(const std::string& name)

@@ -1,8 +1,7 @@
 #include "Island.h"
 #include "Model.h"
-#include "Geometry.h"
 #include <iostream>
-#include <string>
+
 using namespace std;
 
 // initialize then output constructor message
@@ -52,5 +51,5 @@ void Island::describe() const
 // ask model to notify views of current state
 void Island::broadcast_current_state()
 {
-    Model::get_Instance()->notify_location_ship(get_name(), position);
+    Model::get_Instance()->notify_location_island(get_name(), position);
 }
