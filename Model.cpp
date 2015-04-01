@@ -25,7 +25,7 @@ Model::Model() : time(0)
     Model::Island_ptr exxon = make_shared<Island>("Exxon", Point(10, 10), 1000, 200);
     Model::Island_ptr shell = make_shared<Island>("Shell", Point(0, 30), 1000, 200);
     Model::Island_ptr bermuda = make_shared<Island>("Bermuda", Point(20, 20));
-    Model::Island_ptr treasure_island = make_shared<Island>("Treasure Island", Point(50, 5), 100, 5);
+    Model::Island_ptr treasure_island = make_shared<Island>("Treasure_Island", Point(50, 5), 100, 5);
 
     string short_exxon = exxon->get_name().substr(0, SHORTEN_NAME_LENGTH);
     islands[short_exxon] = exxon;

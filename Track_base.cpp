@@ -1,4 +1,5 @@
 #include "Track_base.h"
+#include "Utility.h"
 
 #include <iostream>
 #include <cmath>
@@ -9,23 +10,23 @@ using namespace std;
 
 Track_base::Track_base() : altitude(0.)
 {
-	std::cout << "Track_base constructed" << std::endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) std::cout << "Track_base constructed" << std::endl;
 }
 
 Track_base::Track_base(Point in_position) : position(in_position), altitude(0.)
 {
-	std::cout << "Track_base constructed" << std::endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) std::cout << "Track_base constructed" << std::endl;
 }
 
 Track_base::Track_base(Point in_position, Course_speed in_course_speed, double in_altitude) :
 		position(in_position), course_speed(in_course_speed), altitude(in_altitude)
 {
-	std::cout << "Track_base constructed" << std::endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) std::cout << "Track_base constructed" << std::endl;
 }
 
 Track_base::~Track_base()
 {
-	std::cout << "Track_base destructed" << std::endl;
+	if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) std::cout << "Track_base destructed" << std::endl;
 }
 
 
