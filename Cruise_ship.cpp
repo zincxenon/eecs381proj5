@@ -58,6 +58,7 @@ void Cruise_ship::update()
                 islands_left.erase(island_it);
             }
             target_island.reset();
+            return;
         case State_cruise_ship::SIGHTSEEING:
             // do nothing while passengers see the sights
             cruise_state = State_cruise_ship::READY_TO_DEPART;
