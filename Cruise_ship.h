@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 
-enum class State_cruise_ship {OFF_CRUISE, TRAVELING_TO_ISLAND, SIGHTSEEING, READY_TO_DEPART};
+enum class State_cruise_ship {OFF_CRUISE, TRAVELING_TO_ISLAND, REFUELING, SIGHTSEEING, READY_TO_DEPART};
 
 class Cruise_ship : public Ship {
 public:
