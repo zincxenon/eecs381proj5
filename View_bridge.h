@@ -8,7 +8,7 @@
 
 class View_bridge : public View_locations {
 public:
-    View_bridge(std::string& name);
+    View_bridge(const std::string& name);
     ~View_bridge();
 
     void update_course_and_speed(const std::string& name, double course, double speed) override;
