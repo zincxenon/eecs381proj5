@@ -14,7 +14,6 @@ const double CRUISE_SHIP_INIT_RESISTANCE = 0;
 Cruise_ship::Cruise_ship(const std::string &name_, Point position_) :
         Ship(name_, position_, CRUISE_SHIP_INIT_FUEL, CRUISE_SHIP_MAX_SPEED,
                 CRUISE_SHIP_FUEL_CONSUMPTION, CRUISE_SHIP_INIT_RESISTANCE),
-        all_islands(), islands_left(), first_island(), target_island(),
         cruise_speed(0), cruise_state(State_cruise_ship::OFF_CRUISE)
 {
     Model::Island_map island_map = Model::get_Instance()->get_islands();

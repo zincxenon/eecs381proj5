@@ -7,13 +7,13 @@
 using namespace std;
 
 const char* const CANNOT_ATTACK_MSG = "Cannot attack!";
-const int SHIP_DOCK_DISTANCE = .1;
+const double SHIP_DOCK_DISTANCE = .1;
 
 Ship::Ship(const string &name_, Point position_, double fuel_capacity_,
         double maximum_speed_, double fuel_consumption_, int resistance_) :
-        Sim_object(name_), fuel(fuel_capacity_), track(position_, Course_speed(0, 0)),
-		fuel_consumption(fuel_consumption_), fuel_capacity(fuel_capacity_), max_speed(maximum_speed_),
-		resistance(resistance_), ship_state(State_ship::STOPPED), docked_at()
+        Sim_object(name_), fuel(fuel_capacity_), fuel_consumption(fuel_consumption_),
+		track(position_, Course_speed(0, 0)), fuel_capacity(fuel_capacity_), max_speed(maximum_speed_),
+		resistance(resistance_), ship_state(State_ship::STOPPED)
 {
     cout << "Ship " << get_name() << " constructed" << endl;
 }

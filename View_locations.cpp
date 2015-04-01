@@ -3,7 +3,7 @@
 
 using namespace std;
 
-View_locations::View_locations()
+View_locations::View_locations() : View()
 {
     cout << "View_locations constructed" << endl;
 }

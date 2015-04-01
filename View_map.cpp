@@ -18,7 +18,7 @@ const int VIEW_MAP_LINES_PER_AXIS_LABEL = 3;
 const int VIEW_MAP_AXIS_LABEL_MAX = 4;
 
 // default constructor sets the default size, scale, and origin, outputs constructor message
-View_map::View_map()
+View_map::View_map() : View_locations()
 {
     set_defaults();
     cout << "View_map constructed" << endl;

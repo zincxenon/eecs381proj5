@@ -6,7 +6,7 @@ using namespace std;
 
 const int VIEW_SAIL_FIELD_SIZE = 10;
 
-View_sail::View_sail()
+View_sail::View_sail() : View()
 {
     cout << "View_sail constructed" << endl;
 }

@@ -25,7 +25,7 @@ const double VIEW_BRIDGE_MIN_DIST = .005;
 const double VIEW_BRIDGE_FULL = 360;
 const double VIEW_BRIDGE_HALF = 180;
 
-View_bridge::View_bridge(std::string& name) : target(name), target_sunk(false)
+View_bridge::View_bridge(std::string& name) : View_locations(), target(name), target_sunk(false)
 {
     cout << "View_bridge constructed" << endl;
 }
