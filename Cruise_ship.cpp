@@ -50,10 +50,8 @@ void Cruise_ship::update()
             cruise_state = State_cruise_ship::SIGHTSEEING;
             // scope for declaring variables
             {
-                auto island_it = lower_bound(islands_left.begin(), islands_left.end(), target_island,
-                        [](shared_ptr<Island> first, shared_ptr<Island> second) {
-                            return first->get_name() < second->get_name();
-                        });
+                auto island_it = lower_bound(islands_left.begin(), islands_left.end(),
+                        target_island, island_name_compare);
                 assert((*island_it)->get_name() == target_island->get_name() && island_it != islands_left.end());
                 islands_left.erase(island_it);
             }
@@ -128,7 +126,13 @@ void Cruise_ship::stop()
 
 void Cruise_ship::begin_cruise(double speed, shared_ptr<Island> island)
 {
-    for_each(all_islands.begin(), all_islands.end(), [this](pair<Point, shared_ptr<Island>> pair){islands_left.push_back(pair.second);});
+    //islands_left.push_back(pair.second);
+    for (auto&& island : all_islands)
+    {
+        auto island_it = lower_bound(islands_left.begin(), islands_left.end(), island.second, island_name_compare);
+        islands_left.insert(island_it, island.second);
+    }
+    //for_each(all_islands.begin(), all_islands.end(), [this](pair<Point, shared_ptr<Island>> pair){});
     // islands_left will be in order by name because all_islands is in order by name
     first_island = island;
     target_island = island;

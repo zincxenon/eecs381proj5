@@ -2,6 +2,7 @@
 #define CRUISE_SHIP_H
 
 #include "Ship.h"
+#include "Island.h"
 #include "Geometry.h"
 #include <string>
 #include <map>
@@ -39,6 +40,11 @@ private:
     void begin_cruise(double speed, std::shared_ptr<Island> island);
     void end_cruise();
     void check_and_cancel_cruise();
+
+    bool island_name_compare(std::shared_ptr<Island> first, std::shared_ptr<Island> second)
+    {
+        return first->get_name() < second->get_name();
+    }
 };
 
 #endif
