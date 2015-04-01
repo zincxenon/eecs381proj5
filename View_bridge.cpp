@@ -92,7 +92,7 @@ void View_bridge::draw()
     {
         cout << setw(VIEW_BRIDGE_AXIS_LABEL_MAX + 1) << " ";
         // iterate through the map of this row
-        for (int x = 0; x < VIEW_BRIDGE_MAP_HEIGHT; x++)
+        for (int x = 0; x < VIEW_BRIDGE_MAP_WIDTH; x++)
         {
             cout << bridge_map[y][x];
         }
