@@ -17,11 +17,10 @@ Cruise_ship::Cruise_ship(const std::string &name_, Point position_) :
         cruise_speed(0), cruise_state(State_cruise_ship::OFF_CRUISE)
 {
     Model::Island_map island_map = Model::get_Instance()->get_islands();
-    for (auto&& island_pair : island_map) all_islands[island_pair.second->get_location()] = island_pair.second;
-    for (auto&& island : all_islands)
+    for (auto&& island_pair : island_map)
     {
-        auto island_it = lower_bound(islands_left.begin(), islands_left.end(), island.second, island_name_compare);
-        all_islands_in_order.insert(island_it, island.second);
+        all_islands[island_pair.second->get_location()] = island_pair.second;
+        all_islands_in_order.push_back(island_pair.second);
     }
     if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Cruise ship " << get_name() << " constructed" << endl;
 }
