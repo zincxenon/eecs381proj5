@@ -41,7 +41,7 @@ private:
     void end_cruise();
     void check_and_cancel_cruise();
 
-    bool island_name_compare(std::shared_ptr<Island> first, std::shared_ptr<Island> second)
+    static bool island_name_compare(std::shared_ptr<Island> first, std::shared_ptr<Island> second)
     {
         return first->get_name() < second->get_name();
     }
