@@ -56,7 +56,7 @@ void Cruise_ship::update()
             {
                 auto island_it = lower_bound(islands_left.begin(), islands_left.end(),
                         target_island, island_name_compare);
-                assert((*island_it)->get_name() == target_island->get_name() && island_it != islands_left.end());
+                assert(island_it != islands_left.end() && (*island_it)->get_name() == target_island->get_name());
                 islands_left.erase(island_it);
             }
             target_island.reset();

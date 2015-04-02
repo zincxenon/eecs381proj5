@@ -27,18 +27,14 @@ Model::Model() : time(0)
     Model::Island_ptr bermuda = make_shared<Island>("Bermuda", Point(20, 20));
     Model::Island_ptr treasure_island = make_shared<Island>("Treasure_Island", Point(50, 5), 100, 5);
 
-    string short_exxon = exxon->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    islands[short_exxon] = exxon;
-    objects[short_exxon] = exxon;
-    string short_shell = shell->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    islands[short_shell] = shell;
-    objects[short_shell] = shell;
-    string short_bermuda = bermuda->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    islands[short_bermuda] = bermuda;
-    objects[short_bermuda] = bermuda;
-    string short_treasure_island = treasure_island->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    islands[short_treasure_island] = treasure_island;
-    objects[short_treasure_island] = treasure_island;
+    islands[exxon->get_name()] = exxon;
+    objects[exxon->get_name()] = exxon;
+    islands[shell->get_name()] = shell;
+    objects[shell->get_name()] = shell;
+    islands[bermuda->get_name()] = bermuda;
+    objects[bermuda->get_name()] = bermuda;
+    islands[treasure_island->get_name()] = treasure_island;
+    objects[treasure_island->get_name()] = treasure_island;
 
     add_ship(create_ship("Ajax", "Cruiser", Point (15, 15)));
     add_ship(create_ship("Xerxes", "Cruiser", Point (25, 25)));
@@ -60,8 +56,7 @@ Model::~Model()
 // will throw Error("Island not found!") if no island of that name
 Model::Island_ptr Model::get_island_ptr(const std::string& name) const
 {
-    string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
-    auto island_it = islands.find(shortened_name);
+    auto island_it = islands.find(name);
     if (island_it == islands.end()) throw Error(ISLAND_NOT_FOUND_MSG);
     Model::Island_ptr island = (*island_it).second;
     if (island->get_name() != name) throw Error(ISLAND_NOT_FOUND_MSG);
@@ -71,16 +66,14 @@ Model::Island_ptr Model::get_island_ptr(const std::string& name) const
 // add a new ship to the list, and update the view
 void Model::add_ship(Model::Ship_ptr ship)
 {
-    string shortened_name = ship->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    ships[shortened_name] = ship;
-    objects[shortened_name] = ship;
+    ships[ship->get_name()] = ship;
+    objects[ship->get_name()] = ship;
     notify_location_ship(ship->get_name(), ship->get_location());
 }
 // will throw Error("Ship not found!") if no ship of that name
 Model::Ship_ptr Model::get_ship_ptr(const std::string& name) const
 {
-    string shortened_name = name.substr(0, SHORTEN_NAME_LENGTH);
-    auto ship_it = ships.find(shortened_name);
+    auto ship_it = ships.find(name);
     if (ship_it == ships.end()) throw Error(SHIP_NOT_FOUND_MSG);
     Ship_ptr ship = (*ship_it).second;
     if (ship->get_name() != name) throw Error(SHIP_NOT_FOUND_MSG);
@@ -88,11 +81,10 @@ Model::Ship_ptr Model::get_ship_ptr(const std::string& name) const
 }
 void Model::remove_ship(shared_ptr<Ship> ship)
 {
-    string shortened_name = ship->get_name().substr(0, SHORTEN_NAME_LENGTH);
-    auto ship_it = ships.find(shortened_name);
+    auto ship_it = ships.find(ship->get_name());
     if (ship_it == ships.end()) throw Error(SHIP_NOT_FOUND_MSG);
     ships.erase(ship_it);
-    objects.erase(shortened_name);
+    objects.erase(ship->get_name());
 }
 
 // tell all objects to describe themselves

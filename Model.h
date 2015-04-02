@@ -33,9 +33,7 @@ public:
 	typedef std::shared_ptr<Ship> Ship_ptr;
 	typedef std::shared_ptr<Sim_object> Sim_object_ptr;
 
-	typedef std::map<std::string, Island_ptr> Island_map;
-	typedef std::map<std::string, Ship_ptr> Ship_map;
-	typedef std::map<std::string, Sim_object_ptr> Sim_object_map;
+	typedef std::map<std::string, Island_ptr, title_substring_compare> Island_map;
 
 	static Model* get_Instance();
 
@@ -46,13 +44,13 @@ public:
     // either the identical name, or identical in first two characters counts as in-use
 	bool is_name_in_use(const std::string& name) const
     {
-        return objects.find(name.substr(0, SHORTEN_NAME_LENGTH)) != objects.end();
+        return objects.find(name) != objects.end();
     }
 
 	// is there such an island?
 	bool is_island_present(const std::string& name) const
     {
-        return islands.find(name.substr(0, SHORTEN_NAME_LENGTH)) != islands.end();
+        return islands.find(name) != islands.end();
     }
 	// will throw Error("Island not found!") if no island of that name
 	Island_ptr get_island_ptr(const std::string& name) const;
@@ -65,7 +63,7 @@ public:
 	// is there such an ship?
 	bool is_ship_present(const std::string& name) const
     {
-        return ships.find(name.substr(0, SHORTEN_NAME_LENGTH)) != ships.end();
+        return ships.find(name) != ships.end();
     }
 	// add a new ship to the list, and update the view
 	void add_ship(Ship_ptr);
@@ -111,11 +109,22 @@ private:
 
 	int time;		// the simulated time
 
+	typedef std::map<std::string, Ship_ptr, title_substring_compare> Ship_map;
+	typedef std::map<std::string, Sim_object_ptr, title_substring_compare> Sim_object_map;
+
     Island_map islands;
 	Ship_map ships;
 	Sim_object_map objects;
 
     std::vector<std::shared_ptr<View>> views;
+
+	struct title_substring_compare
+	{
+		bool operator()(const std::string& a, const std::string& b) const
+		{
+			return first.substr(0, SHORTEN_NAME_LENGTH) < second.substr(0, SHORTEN_NAME_LENGTH);
+		}
+	};
 };
 
 #endif
