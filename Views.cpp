@@ -217,7 +217,7 @@ bool View_bridge::get_heading(int& x, Point location)
     }
     if (bearing > VIEW_BRIDGE_HALF)
     {
-        bearing -= VIEW_BRIDGE_HALF;
+        bearing -= VIEW_BRIDGE_FULL;
     }
     cout << "bearing to position " << location << " is " << bearing << endl;
     x = int(floor((bearing - VIEW_BRIDGE_MIN_SHOW) / VIEW_BRIDGE_SCALE));
