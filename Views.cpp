@@ -8,6 +8,101 @@
 
 using namespace std;
 
+const int VIEW_SAIL_FIELD_SIZE = 10;
+
+View_sail::View_sail() : View()
+{
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail constructed" << endl;
+}
+View_sail::~View_sail()
+{
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail destructed" << endl;
+}
+
+void View_sail::update_course_and_speed(const std::string& name, double course, double speed)
+{
+    auto ship_it = ship_map.find(name);
+    if (ship_it == ship_map.end())
+    {
+        Ship_data data;
+        data.set_course_speed(course, speed);
+        ship_map[name] = data;
+    }
+    else
+    {
+        (*ship_it).second.set_course_speed(course, speed);
+    }
+}
+void View_sail::update_fuel(const std::string& name, double fuel)
+{
+    auto ship_it = ship_map.find(name);
+    if (ship_it == ship_map.end())
+    {
+        Ship_data data;
+        data.set_fuel(fuel);
+        ship_map[name] = data;
+    }
+    else
+    {
+        (*ship_it).second.set_fuel(fuel);
+    }
+}
+
+// Remove the name and its location; no error if the name is not present.
+void View_sail::update_remove_ship(const std::string& name)
+{
+    auto ship_it = ship_map.find(name);
+    if (ship_it != ship_map.end()) ship_map.erase(ship_it);
+}
+
+// prints out the current map
+void View_sail::draw()
+{
+    cout << "----- Sailing Data -----" << endl;
+    cout.width(VIEW_SAIL_FIELD_SIZE);
+    cout << setw(VIEW_SAIL_FIELD_SIZE) << "Ship" << setw(VIEW_SAIL_FIELD_SIZE) << "Fuel" <<
+            setw(VIEW_SAIL_FIELD_SIZE) << "Course" << setw(VIEW_SAIL_FIELD_SIZE) << "Speed" << endl;
+    for (auto&& ship : ship_map)
+    {
+        cout << setw(VIEW_SAIL_FIELD_SIZE) << ship.first << setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_fuel() <<
+                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_course() <<
+                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_speed() << endl;
+    }
+}
+
+// Discard the saved information - drawing will show only a empty pattern
+void View_sail::clear()
+{
+    ship_map.clear();
+}
+
+View_locations::View_locations() : View()
+{
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations constructed" << endl;
+}
+View_locations::~View_locations()
+{
+    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations destructed" << endl;
+}
+
+// Save the supplied name and information for future use in a draw() call
+// If the name is already present,the new location replaces the previous one.
+void View_locations::update_location_ship(const std::string& name, Point location)
+{
+    object_data[name] = location;
+}
+void View_locations::update_location_island(const std::string& name, Point location)
+{
+    object_data[name] = location;
+}
+
+// Remove the name and its location; no error if the name is not present.
+void View_locations::update_remove_ship(const std::string& name)
+{
+    auto object_it = object_data.find(name);
+    if (object_it != object_data.end()) object_data.erase(object_it);
+}
+
 const int VIEW_BRIDGE_MAP_HEIGHT = 3;
 const int VIEW_BRIDGE_MAP_WIDTH = 19;
 const string VIEW_BRIDGE_MULTIPLE_OBJECT = "**";
@@ -115,6 +210,7 @@ bool View_bridge::get_heading(int& x, Point location)
     Compass_position compass(object_data[target], location);
     if (compass.range < VIEW_BRIDGE_MIN_DIST || compass.range > VIEW_BRIDGE_MAX_DIST) return false;
     double bearing = compass.bearing;
+    cout << "bearing to position " << location << " is " << bearing << endl;
     if (bearing < -1 * VIEW_BRIDGE_HALF)
     {
         bearing += VIEW_BRIDGE_FULL;
@@ -126,33 +222,6 @@ bool View_bridge::get_heading(int& x, Point location)
     x = int(floor((bearing - VIEW_BRIDGE_MIN_SHOW) / VIEW_BRIDGE_SCALE));
     if (x < 0 || x >= VIEW_BRIDGE_MAP_WIDTH) return false;
     return true;
-}
-
-View_locations::View_locations() : View()
-{
-    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations constructed" << endl;
-}
-View_locations::~View_locations()
-{
-    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_locations destructed" << endl;
-}
-
-// Save the supplied name and information for future use in a draw() call
-// If the name is already present,the new location replaces the previous one.
-void View_locations::update_location_ship(const std::string& name, Point location)
-{
-    object_data[name] = location;
-}
-void View_locations::update_location_island(const std::string& name, Point location)
-{
-    object_data[name] = location;
-}
-
-// Remove the name and its location; no error if the name is not present.
-void View_locations::update_remove_ship(const std::string& name)
-{
-    auto object_it = object_data.find(name);
-    if (object_it != object_data.end()) object_data.erase(object_it);
 }
 
 const int VIEW_MAP_DEFAULT_SIZE = 25;
@@ -280,72 +349,4 @@ bool View_map::get_subscripts(int &ix, int &iy, Point location)
         return false;
     else
         return true;
-}
-
-const int VIEW_SAIL_FIELD_SIZE = 10;
-
-View_sail::View_sail() : View()
-{
-    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail constructed" << endl;
-}
-View_sail::~View_sail()
-{
-    if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "View_sail destructed" << endl;
-}
-
-void View_sail::update_course_and_speed(const std::string& name, double course, double speed)
-{
-    auto ship_it = ship_map.find(name);
-    if (ship_it == ship_map.end())
-    {
-        Ship_data data;
-        data.set_course_speed(course, speed);
-        ship_map[name] = data;
-    }
-    else
-    {
-        (*ship_it).second.set_course_speed(course, speed);
-    }
-}
-void View_sail::update_fuel(const std::string& name, double fuel)
-{
-    auto ship_it = ship_map.find(name);
-    if (ship_it == ship_map.end())
-    {
-        Ship_data data;
-        data.set_fuel(fuel);
-        ship_map[name] = data;
-    }
-    else
-    {
-        (*ship_it).second.set_fuel(fuel);
-    }
-}
-
-// Remove the name and its location; no error if the name is not present.
-void View_sail::update_remove_ship(const std::string& name)
-{
-    auto ship_it = ship_map.find(name);
-    if (ship_it != ship_map.end()) ship_map.erase(ship_it);
-}
-
-// prints out the current map
-void View_sail::draw()
-{
-    cout << "----- Sailing Data -----" << endl;
-    cout.width(VIEW_SAIL_FIELD_SIZE);
-    cout << setw(VIEW_SAIL_FIELD_SIZE) << "Ship" << setw(VIEW_SAIL_FIELD_SIZE) << "Fuel" <<
-            setw(VIEW_SAIL_FIELD_SIZE) << "Course" << setw(VIEW_SAIL_FIELD_SIZE) << "Speed" << endl;
-    for (auto&& ship : ship_map)
-    {
-        cout << setw(VIEW_SAIL_FIELD_SIZE) << ship.first << setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_fuel() <<
-                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_course() <<
-                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_speed() << endl;
-    }
-}
-
-// Discard the saved information - drawing will show only a empty pattern
-void View_sail::clear()
-{
-    ship_map.clear();
 }
