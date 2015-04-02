@@ -29,6 +29,14 @@ Model also provides facilities for looking up objects given their name.
 
 class Model {
 public:
+	struct title_substring_compare
+	{
+		bool operator()(const std::string& first, const std::string& second) const
+		{
+			return first.substr(0, SHORTEN_NAME_LENGTH) < second.substr(0, SHORTEN_NAME_LENGTH);
+		}
+	};
+
 	typedef std::shared_ptr<Island> Island_ptr;
 	typedef std::shared_ptr<Ship> Ship_ptr;
 	typedef std::shared_ptr<Sim_object> Sim_object_ptr;
@@ -117,14 +125,6 @@ private:
 	Sim_object_map objects;
 
     std::vector<std::shared_ptr<View>> views;
-
-	struct title_substring_compare
-	{
-		bool operator()(const std::string& a, const std::string& b) const
-		{
-			return first.substr(0, SHORTEN_NAME_LENGTH) < second.substr(0, SHORTEN_NAME_LENGTH);
-		}
-	};
 };
 
 #endif
