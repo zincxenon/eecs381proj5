@@ -17,7 +17,7 @@ const char* const UNRECOGNIZED_ERROR_MSG = "Unrecognized command!";
 const int MAX_COURSE_DEGREES = 360;
 
 // output constructor message
-Controller::Controller()
+Controller::Controller() : view_map(views.end()), view_sail(views.end())
 {
     if (SHOW_CONSTRUCTOR_DESTRUCTOR_MSG) cout << "Controller constructed" << endl;
 }
@@ -124,42 +124,39 @@ bool Controller::quit()
 // view functions
 bool Controller::view_show()
 {
-    // first, remove all expired views from the list of views
-    views.erase(remove_if(views.begin(), views.end(), mem_fn(&weak_ptr<View>::expired)));
-    // now, draw every view
-    for_each(views.begin(), views.end(), [](weak_ptr<View> view){view.lock()->draw();});
+    for_each(views.begin(), views.end(), [](shared_ptr<View> view){view->draw();});
     return false;
 }
 bool Controller::view_map_open()
 {
-    if (view_map) throw Error("Map view is already open!");
-    view_map = make_shared<View_map>();
-    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_map>(view_map);
+    if (view_map != views.end()) throw Error("Map view is already open!");
+    shared_ptr<View> view_ptr(make_shared<View_map>());
     Model::get_Instance()->attach(view_ptr);
-    views.push_back(weak_ptr<View>(view_ptr));
+    view_map = views.insert(views.end(), view_ptr);
     return false;
 }
 bool Controller::view_map_close()
 {
-    if (!view_map) throw Error("Map view is not open!");
-    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_map>(view_map));
-    view_map.reset();
+    if (view_map == views.end()) throw Error("Map view is not open!");
+    Model::get_Instance()->detach(*view_map);
+    views.erase(view_map);
+    view_map = views.end();
     return false;
 }
 bool Controller::view_sail_open()
 {
-    if (view_sail) throw Error("Sailing data view is already open!");
-    view_sail = make_shared<View_sail>();
-    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_sail>(view_sail);
+    if (view_sail != views.end()) throw Error("Sailing data view is already open!");
+    shared_ptr<View> view_ptr(make_shared<View_sail>());
     Model::get_Instance()->attach(view_ptr);
-    views.push_back(weak_ptr<View>(view_ptr));
+    view_sail = views.insert(views.end(), view_ptr);
     return false;
 }
 bool Controller::view_sail_close()
 {
-    if (!view_sail) throw Error("Sailing data view is not open!");
-    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_sail>(view_sail));
-    view_sail.reset();
+    if (view_sail == views.end()) throw Error("Sailing data view is not open!");
+    Model::get_Instance()->detach(*view_sail);
+    views.erase(view_sail);
+    view_sail = views.end();
     return false;
 }
 bool Controller::view_bridge_open()
@@ -169,52 +166,52 @@ bool Controller::view_bridge_open()
     if (bridge_views.find(name) != bridge_views.end()) throw Error("Bridge view is already open for that ship!");
     Model *model = Model::get_Instance();
     shared_ptr<Ship> ship = model->get_ship_ptr(name); // make sure ship exists!
-    shared_ptr<View_bridge> bridge_view = make_shared<View_bridge>(ship->get_name());
-    bridge_views[name] = bridge_view;
-    shared_ptr<View> view_ptr = dynamic_pointer_cast<View, View_bridge>(bridge_view);
+    shared_ptr<View> view_ptr = make_shared<View_bridge>(ship->get_name());
     model->attach(view_ptr);
-    views.push_back(view_ptr);
+    bridge_views[name] = views.insert(views.end(), view_ptr);
     return false;
 }
 bool Controller::view_bridge_close()
 {
     string name;
     cin >> name;
-    auto view_it = bridge_views.find(name);
-    if (view_it == bridge_views.end()) throw Error("Bridge view for that ship is not open!");
-    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_bridge>((*view_it).second));
-    bridge_views.erase(view_it);
+    auto bridge_it = bridge_views.find(name);
+    if (bridge_it == bridge_views.end()) throw Error("Bridge view for that ship is not open!");
+    ViewListIterator view_it = (*bridge_it).second;
+    Model::get_Instance()->detach(dynamic_pointer_cast<View, View_bridge>(*view_it);
+    views.erase(view_it);
+    bridge_views.erase(bridge_it);
     return false;
 }
 
 // view_map functions
 bool Controller::view_map_default()
 {
-    if (!view_map) throw Error("Map view is not open!");
-    view_map->set_defaults();
+    if (view_map == views.end()) throw Error("Map view is not open!");
+    dynamic_pointer_cast<View_map, View>(*view_map)->set_defaults();
     return false;
 }
 bool Controller::view_map_size()
 {
+    if (view_map == views.end()) throw Error("Map view is not open!");
     int new_size = read_int();
-    if (!view_map) throw Error("Map view is not open!");
-    view_map->set_size(new_size);
+    dynamic_pointer_cast<View_map, View>(*view_map)->set_size(new_size);
     return false;
 }
 bool Controller::view_map_zoom()
 {
+    if (view_map == views.end()) throw Error("Map view is not open!");
     double new_scale = read_double();
-    if (!view_map) throw Error("Map view is not open!");
-    view_map->set_scale(new_scale);
+    dynamic_pointer_cast<View_map, View>(*view_map)->set_scale(new_scale);
     return false;
 }
 bool Controller::view_map_pan()
 {
+    if (view_map == views.end()) throw Error("Map view is not open!");
     double point_x, point_y;
     point_x = read_double();
     point_y = read_double();
-    if (!view_map) throw Error("Map view is not open!");
-    view_map->set_origin(Point(point_x, point_y));
+    dynamic_pointer_cast<View_map, View>(*view_map)->set_origin(Point(point_x, point_y));
     return false;
 }
 

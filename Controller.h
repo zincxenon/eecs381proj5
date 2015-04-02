@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <list>
 #include <map>
 #include <memory>
 #include <string>
@@ -29,10 +30,13 @@ public:
 	void run();
 
 private:
-	std::vector<std::weak_ptr<View>> views;
-	std::shared_ptr<View_map> view_map;
-	std::shared_ptr<View_sail> view_sail;
-	std::map<std::string, std::shared_ptr<View_bridge>> bridge_views;
+	typedef std::list<std::shared_ptr<View>> ViewList;
+	typedef ViewList::iterator ViewListIterator;
+
+	ViewList views;
+	ViewListIterator view_map;
+	ViewListIterator view_sail;
+	std::map<std::string, ViewListIterator> bridge_views;
 
 	// helper functions
 	int read_int();

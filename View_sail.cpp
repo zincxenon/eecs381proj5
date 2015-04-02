@@ -56,6 +56,7 @@ void View_sail::update_remove_ship(const std::string& name)
 void View_sail::draw()
 {
     cout << "----- Sailing Data -----" << endl;
+    // change width
     auto old_width = cout.width();
     cout.width(VIEW_SAIL_FIELD_SIZE);
     cout << "Ship" << "Fuel" << "Course" << "Speed" << endl;
@@ -63,6 +64,7 @@ void View_sail::draw()
     {
         cout << ship.first << ship.second.get_fuel() << ship.second.get_course() << ship.second.get_speed() << endl;
     }
+    // reset width
     cout.width(old_width);
 }
 
