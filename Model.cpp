@@ -58,9 +58,7 @@ Model::Island_ptr Model::get_island_ptr(const std::string& name) const
 {
     auto island_it = islands.find(name);
     if (island_it == islands.end()) throw Error(ISLAND_NOT_FOUND_MSG);
-    Model::Island_ptr island = (*island_it).second;
-    if (island->get_name() != name) throw Error(ISLAND_NOT_FOUND_MSG);
-    return island;
+    return (*island_it).second;
 }
 
 // add a new ship to the list, and update the view
@@ -75,9 +73,7 @@ Model::Ship_ptr Model::get_ship_ptr(const std::string& name) const
 {
     auto ship_it = ships.find(name);
     if (ship_it == ships.end()) throw Error(SHIP_NOT_FOUND_MSG);
-    Ship_ptr ship = (*ship_it).second;
-    if (ship->get_name() != name) throw Error(SHIP_NOT_FOUND_MSG);
-    return ship;
+    return (*ship_it).second;
 }
 void Model::remove_ship(shared_ptr<Ship> ship)
 {

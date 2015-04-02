@@ -29,19 +29,11 @@ Model also provides facilities for looking up objects given their name.
 
 class Model {
 public:
-	struct title_substring_compare
-	{
-		bool operator()(const std::string& first, const std::string& second) const
-		{
-			return first.substr(0, SHORTEN_NAME_LENGTH) < second.substr(0, SHORTEN_NAME_LENGTH);
-		}
-	};
-
 	typedef std::shared_ptr<Island> Island_ptr;
 	typedef std::shared_ptr<Ship> Ship_ptr;
 	typedef std::shared_ptr<Sim_object> Sim_object_ptr;
 
-	typedef std::map<std::string, Island_ptr, title_substring_compare> Island_map;
+	typedef std::map<std::string, Island_ptr> Island_map;
 
 	static Model* get_Instance();
 
@@ -117,7 +109,14 @@ private:
 
 	int time;		// the simulated time
 
-	typedef std::map<std::string, Ship_ptr, title_substring_compare> Ship_map;
+	typedef std::map<std::string, Ship_ptr> Ship_map;
+	struct title_substring_compare
+	{
+		bool operator()(const std::string& first, const std::string& second) const
+		{
+			return first.substr(0, SHORTEN_NAME_LENGTH) < second.substr(0, SHORTEN_NAME_LENGTH);
+		}
+	};
 	typedef std::map<std::string, Sim_object_ptr, title_substring_compare> Sim_object_map;
 
     Island_map islands;
