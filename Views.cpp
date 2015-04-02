@@ -210,7 +210,6 @@ bool View_bridge::get_heading(int& x, Point location)
     Compass_position compass(object_data[target], location);
     if (compass.range < VIEW_BRIDGE_MIN_DIST || compass.range > VIEW_BRIDGE_MAX_DIST) return false;
     double bearing = compass.bearing;
-    cout << "bearing to position " << location << " is " << bearing << endl;
     if (bearing < -1 * VIEW_BRIDGE_HALF)
     {
         bearing += VIEW_BRIDGE_FULL;
@@ -219,6 +218,7 @@ bool View_bridge::get_heading(int& x, Point location)
     {
         bearing -= VIEW_BRIDGE_HALF;
     }
+    cout << "bearing to position " << location << " is " << bearing << endl;
     x = int(floor((bearing - VIEW_BRIDGE_MIN_SHOW) / VIEW_BRIDGE_SCALE));
     if (x < 0 || x >= VIEW_BRIDGE_MAP_WIDTH) return false;
     return true;
