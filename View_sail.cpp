@@ -56,16 +56,15 @@ void View_sail::update_remove_ship(const std::string& name)
 void View_sail::draw()
 {
     cout << "----- Sailing Data -----" << endl;
-    // change width
-    auto old_width = cout.width();
     cout.width(VIEW_SAIL_FIELD_SIZE);
-    cout << "Ship" << "Fuel" << "Course" << "Speed" << endl;
+    cout << setw(VIEW_SAIL_FIELD_SIZE) << "Ship" << setw(VIEW_SAIL_FIELD_SIZE) << "Fuel" <<
+            setw(VIEW_SAIL_FIELD_SIZE) << "Course" << setw(VIEW_SAIL_FIELD_SIZE) << "Speed" << endl;
     for (auto&& ship : ship_map)
     {
-        cout << ship.first << ship.second.get_fuel() << ship.second.get_course() << ship.second.get_speed() << endl;
+        cout << setw(VIEW_SAIL_FIELD_SIZE) << ship.first << setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_fuel() <<
+                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_course() <<
+                setw(VIEW_SAIL_FIELD_SIZE) << ship.second.get_speed() << endl;
     }
-    // reset width
-    cout.width(old_width);
 }
 
 // Discard the saved information - drawing will show only a empty pattern

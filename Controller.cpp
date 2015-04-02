@@ -178,6 +178,7 @@ bool Controller::view_bridge_close()
     auto bridge_it = bridge_views.find(name);
     if (bridge_it == bridge_views.end()) throw Error("Bridge view for that ship is not open!");
     ViewListIterator view_it = (*bridge_it).second;
+    Model::get_Instance()->detach(*view_it);
     views.erase(view_it);
     bridge_views.erase(bridge_it);
     return false;
