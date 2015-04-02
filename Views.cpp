@@ -220,7 +220,7 @@ bool View_bridge::get_heading(int& x, Point location)
         bearing -= VIEW_BRIDGE_FULL;
     }
     cout << "bearing to position " << location << " is " << bearing << endl;
-    x = int(floor((bearing - VIEW_BRIDGE_MIN_SHOW) / VIEW_BRIDGE_SCALE));
+    x = int(floor((bearing - target_course - VIEW_BRIDGE_MIN_SHOW) / VIEW_BRIDGE_SCALE));
     if (x < 0 || x >= VIEW_BRIDGE_MAP_WIDTH) return false;
     return true;
 }
