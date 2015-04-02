@@ -210,6 +210,7 @@ bool View_bridge::get_heading(int& x, Point location)
     Compass_position compass(object_data[target], location);
     if (compass.range < VIEW_BRIDGE_MIN_DIST || compass.range > VIEW_BRIDGE_MAX_DIST) return false;
     double bearing = compass.bearing;
+    cout << "original bearing to position " << location << " is " << bearing << endl;
     if (bearing < -1 * VIEW_BRIDGE_HALF)
     {
         bearing += VIEW_BRIDGE_FULL;
