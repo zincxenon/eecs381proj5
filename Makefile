@@ -4,7 +4,7 @@ LD = g++
 CFLAGS = -c -pedantic-errors -std=c++11 -Wall -g
 LFLAGS = -pedantic -Wall
 
-OBJS = p5_main.o Controller.o Cruise_ship.o Cruiser.o Geometry.o Island.o Model.o Navigation.o Ship.o Ship_factory.o Sim_object.o Tanker.o Track_base.o Utility.o View.o View_bridge.o View_locations.o View_map.o View_sail.o Warship.o
+OBJS = p5_main.o Controller.o Cruise_ship.o Cruiser.o Geometry.o Island.o Model.o Navigation.o Ship.o Ship_factory.o Sim_object.o Tanker.o Track_base.o Utility.o View.o Views.o Warship.o
 PROG = p5exe
 
 default: $(PROG)
@@ -15,7 +15,7 @@ $(PROG): $(OBJS)
 p5_main.o: p5_main.cpp Model.h Controller.h
 	$(CC) $(CFLAGS) p5_main.cpp
 
-Controller.o: Controller.h Controller.cpp Model.h View.h View_map.h View_sail.h View_bridge.h Ship.h Island.h Ship_factory.h
+Controller.o: Controller.h Controller.cpp Model.h View.h Views.h Ship.h Island.h Ship_factory.h
 	$(CC) $(CFLAGS) Controller.cpp
 
 Cruise_ship.o: Cruise_ship.h Cruise_ship.cpp Ship.h Geometry.h Island.h
@@ -54,20 +54,11 @@ Track_base.o: Track_base.h Track_base.cpp Navigation.h
 Utility.o: Utility.h Utility.cpp
 	$(CC) $(CFLAGS) Utility.cpp
 
-View.o: View.h View.cpp Geometry.h
+View.o: View.h View.cpp Geometry.h Utility.h
 	$(CC) $(CFLAGS) View.cpp
 
-View_bridge.o: View_bridge.h View_bridge.cpp View_locations.h Geometry.h Navigation.h Utility.h
-	$(CC) $(CFLAGS) View_bridge.cpp
-
-View_locations.o: View_locations.h View_locations.cpp Geometry.h View.h
-	$(CC) $(CFLAGS) View_locations.cpp
-
-View_map.o: View_map.h View_map.cpp Geometry.h View_locations.h Utility.h
-	$(CC) $(CFLAGS) View_map.cpp
-
-View_sail.o: View_sail.h View_sail.cpp Geometry.h View.h
-	$(CC) $(CFLAGS) View_sail.cpp
+Views.o: Views.h Views.cpp Geometry.h Navigation.h Utility.h
+	$(CC) $(CFLAGS) Views.cpp
 
 Warship.o: Warship.h Warship.cpp Ship.h Geometry.h Navigation.h
 	$(CC) $(CFLAGS) Warship.cpp

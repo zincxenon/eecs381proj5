@@ -7,7 +7,6 @@
 #include <algorithm>
 
 using namespace std;
-using namespace placeholders;
 
 const int VIEW_MAP_DEFAULT_SIZE = 25;
 const double VIEW_MAP_DEFAULT_SCALE = 2;

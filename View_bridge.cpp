@@ -87,7 +87,7 @@ void View_bridge::draw()
             }
         }
     }
-
+    // display the map
     for (int y = VIEW_BRIDGE_MAP_HEIGHT - 1; y >= 0; y--)
     {
         cout << setw(VIEW_BRIDGE_AXIS_LABEL_MAX + 1) << " ";
@@ -101,6 +101,7 @@ void View_bridge::draw()
     // save precision
     int old_precision = cout.precision();
     cout.precision(0);
+    // display the axis labels
     for (int x = 0; x < VIEW_BRIDGE_MAP_WIDTH; x += VIEW_BRIDGE_LINES_PER_AXIS_LABEL)
     {
         cout << setw(SHORTEN_NAME_LENGTH * VIEW_BRIDGE_LINES_PER_AXIS_LABEL) << (VIEW_BRIDGE_MIN_SHOW + x * VIEW_BRIDGE_SCALE);
